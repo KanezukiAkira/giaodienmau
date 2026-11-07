@@ -24,34 +24,32 @@
         
         <!-- Logo (Node 3:43533) -->
         <div class="brand-logo-wrap">
-          <span class="brand-logo-title">Blossom</span>
+          <span class="brand-logo-title">Blossom.</span>
           <span class="brand-logo-sub">BEAUTY STORE</span>
         </div>
 
         <!-- Brand introduction (Node 3:43537) -->
         <div class="brand-intro-block">
-          <span class="brand-promise-tag">Nền tảng quản trị nội dung nội bộ</span>
-          <h1 class="brand-headline">Vẻ đẹp thuần khiết khởi nguồn từ sự chăm chút.</h1>
+          <span class="brand-promise-tag">NƠI VẺ ĐẸP ĐƯỢC NUÔI DƯỠNG</span>
+          <h1 class="brand-headline">Một chút yêu thương,<br>ngàn điều rạng rỡ.</h1>
           <p class="brand-desc">
-            Không gian làm việc số dành riêng cho đội ngũ sáng tạo nội dung, biên tập viên và ban điều hành truyền thông Blossom Beauty Store.
+            Cùng Blossom chăm chút từng trải nghiệm và lan tỏa vẻ đẹp đến mỗi khách hàng.
           </p>
         </div>
 
         <!-- Skincare still life (Node 3:43541, 616px × 411px) -->
         <div class="brand-image-card">
-          <img src="https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=1200&q=80" alt="Blossom Skincare Still Life" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?auto=format&fit=crop&w=1200&q=80';">
+          <img src="assets/images/login-skincare-figma.jpg" alt="Blossom Skincare - Nơi vẻ đẹp được nuôi dưỡng">
         </div>
         
         <!-- Image caption (Node 3:43543) -->
         <div class="brand-image-caption">
-          <span class="brand-image-sentiment">"Chăm sóc làn da, nâng niu vẻ đẹp"</span>
-          <span>2026</span>
+          <span class="brand-image-sentiment">"Đẹp từ những điều nhỏ."</span>
         </div>
 
-        <!-- Security Label (Node 3:43546) -->
+        <!-- Copyright / Bottom (Node 3:43546) -->
         <div class="brand-col-bottom">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-          <span>Phiên bản nội bộ v2.4 · Bảo mật cấp doanh nghiệp</span>
+          <span>© 2026 Blossom Beauty Store. Mọi quyền được bảo lưu.</span>
         </div>
 
       </div>
@@ -62,7 +60,7 @@
       
       <!-- Login context (Node 3:43548, width 568px) -->
       <div class="login-form-top">
-        <span class="login-context-label">HỆ THỐNG NỘI BỘ</span>
+        <span class="login-context-label">FR-01 · ĐĂNG NHẬP</span>
         <div class="connection-secure-badge">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
           <span>Kết nối an toàn</span>
@@ -72,30 +70,33 @@
       <!-- Sign in form (Node 3:43553, width 568px) -->
       <div class="login-form-box">
         
-        <!-- Blossom symbol (Node 3:43554, flower-2) -->
+        <!-- Blossom symbol (Node 3:43554, botanical stalk) -->
         <div class="login-symbol">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M12 7.5a4.5 4.5 0 1 1 4.5 4.5M12 7.5A4.5 4.5 0 1 0 7.5 12M12 7.5V9m4.5 3a4.5 4.5 0 1 1-4.5 4.5M16.5 12H15m-3 4.5a4.5 4.5 0 1 1-4.5-4.5M12 16.5V15m-4.5-3H9"/>
-            <circle cx="12" cy="12" r="3"/>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22V8" />
+            <path d="M12 18c-2.5-1-4-3-4-5 2-1 4 0 4 2" />
+            <path d="M12 14c2.5-1 4-3 4-5-2-1-4 0-4 2" />
+            <path d="M12 10c-2-1-3-2.5-3-4 1.5-.8 3 0 3 1.5" />
+            <circle cx="12" cy="5" r="2.5" />
           </svg>
         </div>
 
         <!-- Welcome (Node 3:43556) -->
         <div>
-          <h2 class="login-welcome-title">Đăng nhập hệ thống</h2>
-          <p class="login-welcome-sub">Chào mừng bạn quay trở lại. Vui lòng nhập thông tin xác thực để tiếp tục.</p>
+          <h2 class="login-welcome-title">Chào mừng trở lại!</h2>
+          <p class="login-welcome-sub">Đăng nhập để bắt đầu một ngày thật rạng rỡ cùng Blossom Beauty Store.</p>
         </div>
 
         <form id="loginForm" onsubmit="handleLoginSubmit(event)" class="login-fields">
           
           <!-- Form field 1: Email (Node 3:43559) -->
           <div class="login-field-group">
-            <label for="loginEmail">Email đăng nhập</label>
+            <label for="loginEmail">Email hoặc tên đăng nhập</label>
             <div class="login-input-wrap">
               <span class="login-input-icon">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
               </span>
-              <input type="email" id="loginEmail" required value="minhanh@blossom.vn" placeholder="minhanh@blossom.vn">
+              <input type="text" id="loginEmail" required value="minhanh@blossom.vn" placeholder="minhanh@blossom.vn">
             </div>
           </div>
 
@@ -134,21 +135,24 @@
         <div class="login-internal-notice">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
           <div>
-            Hệ thống chỉ phục vụ nhân sự nội bộ được cấp quyền. Mọi truy cập đều được ghi nhật ký bảo mật.
+            Dành riêng cho đội ngũ Blossom. Vui lòng sử dụng tài khoản được quản trị viên cấp.
           </div>
         </div>
 
         <!-- Contact administrator (Node 3:43581) -->
         <div class="login-contact-admin">
-          Chưa có tài khoản? <a href="javascript:void(0)" onclick="alert('Vui lòng gửi email đến it-support@blossom.vn để được cấp tài khoản.')">Liên hệ quản trị viên</a>
+          Bạn gặp khó khăn? <a href="javascript:void(0)" onclick="alert('Vui lòng gửi email đến it-support@blossom.vn để được cấp tài khoản.')">Liên hệ quản trị viên</a>
         </div>
 
       </div>
 
       <!-- Login footer (Node 3:43582) -->
       <div class="login-form-bottom">
-        <span>© 2026 Blossom Beauty Store</span>
-        <a href="javascript:void(0)" onclick="alert('Chính sách bảo mật Blossom Beauty Store 2026.')">Điều khoản bảo mật</a>
+        <span>Chăm sóc bạn mỗi ngày</span>
+        <div class="login-language-select">
+          <span>Tiếng Việt</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
       </div>
 
     </div>
@@ -175,6 +179,7 @@
       btn.innerHTML = '<span>Đang xác thực...</span>';
       
       setTimeout(() => {
+        sessionStorage.setItem("blossom_logged_in", "true");
         window.location.href = 'index.html';
       }, 500);
     }
