@@ -105,6 +105,9 @@ import {
   setupKeyboardShortcuts,
   handleGlobalSearch,
   handleLogout,
+  openChangePasswordModal,
+  handleAppLoginSubmit,
+  toggleAppPasswordVisibility,
   showHelpModal
 } from './utils/events.js';
 
@@ -209,6 +212,9 @@ Object.assign(window, {
   setupKeyboardShortcuts,
   handleGlobalSearch,
   handleLogout,
+  openChangePasswordModal,
+  handleAppLoginSubmit,
+  toggleAppPasswordVisibility,
   showHelpModal,
   formatDateDisplay,
   escapeHTML
@@ -230,6 +236,14 @@ function initApp() {
   setupKeyboardShortcuts();
   setupKanbanDragDrop();
   initChartTooltips();
+
+  // Authentication check: If not logged in, show Login view first (Figma FR-01)
+  const isLoggedIn = (typeof sessionStorage !== "undefined") && sessionStorage.getItem("blossom_logged_in") === "true";
+  if (!isLoggedIn) {
+    switchView("login");
+  } else {
+    switchView("dashboard");
+  }
 }
 
 if (document.readyState === "loading") {

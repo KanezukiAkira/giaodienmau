@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="css/main.css">
 </head>
 <body>
-  <div class="app-container">
+  <div class="app-container" id="appContainer">
     <!-- SIDEBAR -->
     <aside class="sidebar">
       <div class="brand-logo" onclick="switchView('posts')">
@@ -126,20 +126,29 @@
             <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
 
             <div class="user-dropdown" id="userDropdown">
-              <div class="dropdown-item" onclick="switchView('users')">
+              <!-- Account identity (Figma FR-02 Node 3:43786) -->
+              <div class="user-dropdown-header">
+                <span class="user-dropdown-name">Nguyễn Minh Anh</span>
+                <span class="user-dropdown-email">minhanh@blossom.vn</span>
+                <span class="user-dropdown-role">Quản trị viên · Toàn quyền truy cập</span>
+              </div>
+              
+              <div class="user-dropdown-divider"></div>
+
+              <!-- Menu action: Hồ sơ cá nhân (Node 3:43791) -->
+              <div class="user-dropdown-item" onclick="switchView('users')">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                 <span>Hồ sơ cá nhân</span>
               </div>
-              <div class="dropdown-item" onclick="switchView('settings')">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-                <span>Cài đặt bảo mật</span>
+
+              <!-- Menu action: Đổi mật khẩu (Node 3:43794) -->
+              <div class="user-dropdown-item" onclick="openChangePasswordModal()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="7.5" cy="15.5" r="3.5"/><path d="m15 8 6-6m-3 0 3 3m-4.5 1.5 3 3M10 13l4.5-4.5"/></svg>
+                <span>Đổi mật khẩu</span>
               </div>
-              <div class="dropdown-item" onclick="window.location.href='login.html'">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" x2="3" y1="12" y2="12"/></svg>
-                <span>Trang đăng nhập (FR-01)</span>
-              </div>
-              <div class="dropdown-divider"></div>
-              <div class="dropdown-item text-danger" onclick="handleLogout()">
+
+              <!-- Menu action: Đăng xuất (Node 3:43797) -->
+              <div class="user-dropdown-item logout-action" onclick="handleLogout()">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
                 <span>Đăng xuất</span>
               </div>
@@ -152,9 +161,153 @@
       <div class="content-body" id="contentBody">
         
         <!-- ============================================== -->
+        <!-- VIEW: LOGIN — ĐĂNG NHẬP (FIGMA FR-01) -->
+        <!-- ============================================== -->
+        <section class="view-panel" id="view-login">
+          <div class="login-page">
+            
+            <!-- 1. Left Column: Brand story (Figma FR-01 Node 3:43532, width 744px) -->
+            <div class="login-brand-col">
+              <div class="brand-col-inner">
+                
+                <!-- Logo (Node 3:43533) -->
+                <div class="brand-logo-wrap">
+                  <span class="brand-logo-title">Blossom</span>
+                  <span class="brand-logo-sub">BEAUTY STORE</span>
+                </div>
+
+                <!-- Brand introduction (Node 3:43537) -->
+                <div class="brand-intro-block">
+                  <span class="brand-promise-tag">Nền tảng quản trị nội dung nội bộ</span>
+                  <h1 class="brand-headline">Vẻ đẹp thuần khiết khởi nguồn từ sự chăm chút.</h1>
+                  <p class="brand-desc">
+                    Không gian làm việc số dành riêng cho đội ngũ sáng tạo nội dung, biên tập viên và ban điều hành truyền thông Blossom Beauty Store.
+                  </p>
+                </div>
+
+                <!-- Skincare still life (Node 3:43541, 616px × 411px) -->
+                <div class="brand-image-card">
+                  <img src="https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=1200&q=80" alt="Blossom Skincare Still Life" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?auto=format&fit=crop&w=1200&q=80';">
+                </div>
+                
+                <!-- Image caption (Node 3:43543) -->
+                <div class="brand-image-caption">
+                  <span class="brand-image-sentiment">"Chăm sóc làn da, nâng niu vẻ đẹp"</span>
+                  <span>2026</span>
+                </div>
+
+                <!-- Security Label (Node 3:43546) -->
+                <div class="brand-col-bottom">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                  <span>Phiên bản nội bộ v2.4 · Bảo mật cấp doanh nghiệp</span>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- 2. Right Column: Login area (Figma FR-01 Node 3:43547, width 696px) -->
+            <div class="login-form-col">
+              
+              <!-- Login context (Node 3:43548, width 568px) -->
+              <div class="login-form-top">
+                <span class="login-context-label">HỆ THỐNG NỘI BỘ</span>
+                <div class="connection-secure-badge">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+                  <span>Kết nối an toàn</span>
+                </div>
+              </div>
+
+              <!-- Sign in form (Node 3:43553, width 568px) -->
+              <div class="login-form-box">
+                
+                <!-- Blossom symbol (Node 3:43554, flower-2) -->
+                <div class="login-symbol">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 7.5a4.5 4.5 0 1 1 4.5 4.5M12 7.5A4.5 4.5 0 1 0 7.5 12M12 7.5V9m4.5 3a4.5 4.5 0 1 1-4.5 4.5M16.5 12H15m-3 4.5a4.5 4.5 0 1 1-4.5-4.5M12 16.5V15m-4.5-3H9"/>
+                    <circle cx="12" cy="12" r="3"/>
+                  </svg>
+                </div>
+
+                <!-- Welcome (Node 3:43556) -->
+                <div>
+                  <h2 class="login-welcome-title">Đăng nhập hệ thống</h2>
+                  <p class="login-welcome-sub">Chào mừng bạn quay trở lại. Vui lòng nhập thông tin xác thực để tiếp tục.</p>
+                </div>
+
+                <form id="appLoginForm" onsubmit="handleAppLoginSubmit(event)" class="login-fields">
+                  
+                  <!-- Form field 1: Email (Node 3:43559) -->
+                  <div class="login-field-group">
+                    <label for="appLoginEmail">Email đăng nhập</label>
+                    <div class="login-input-wrap">
+                      <span class="login-input-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                      </span>
+                      <input type="email" id="appLoginEmail" required value="minhanh@blossom.vn" placeholder="minhanh@blossom.vn">
+                    </div>
+                  </div>
+
+                  <!-- Form field 2: Password (Node 3:43564) -->
+                  <div class="login-field-group">
+                    <label for="appLoginPassword">Mật khẩu</label>
+                    <div class="login-input-wrap">
+                      <span class="login-input-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                      </span>
+                      <input type="password" id="appLoginPassword" required value="Blossom2026!" placeholder="••••••••••••">
+                      <button type="button" class="login-toggle-eye" onclick="toggleAppPasswordVisibility()" title="Ẩn/hiện mật khẩu">
+                        <svg id="appEyeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Login options (Node 3:43570) -->
+                  <div class="login-options-row">
+                    <label class="remember-label">
+                      <input type="checkbox" id="appRememberMe" checked>
+                      <span>Ghi nhớ đăng nhập</span>
+                    </label>
+                    <a href="javascript:void(0)" onclick="alert('Vui lòng liên hệ ban IT (it@blossom.vn) để cấp lại mật khẩu.')" class="forgot-link">Quên mật khẩu?</a>
+                  </div>
+
+                  <!-- Login button (Node 3:43575) -->
+                  <button type="submit" class="btn-login-submit" id="btnSubmitAppLogin">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                    <span>Đăng nhập</span>
+                  </button>
+
+                </form>
+
+                <!-- Internal access notice (Node 3:43578) -->
+                <div class="login-internal-notice">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                  <div>
+                    Hệ thống chỉ phục vụ nhân sự nội bộ được cấp quyền. Mọi truy cập đều được ghi nhật ký bảo mật.
+                  </div>
+                </div>
+
+                <!-- Contact administrator (Node 3:43581) -->
+                <div class="login-contact-admin">
+                  Chưa có tài khoản? <a href="javascript:void(0)" onclick="alert('Vui lòng gửi email đến it-support@blossom.vn để được cấp tài khoản.')">Liên hệ quản trị viên</a>
+                </div>
+
+              </div>
+
+              <!-- Login footer (Node 3:43582) -->
+              <div class="login-form-bottom">
+                <span>© 2026 Blossom Beauty Store</span>
+                <a href="javascript:void(0)" onclick="alert('Chính sách bảo mật Blossom Beauty Store 2026.')">Điều khoản bảo mật</a>
+              </div>
+
+            </div>
+
+          </div>
+        </section>
+
+        <!-- ============================================== -->
         <!-- VIEW 0: POST PROGRESS DASHBOARD (FR-13) -->
         <!-- ============================================== -->
-        <section class="view-panel active" id="view-dashboard">
+        <section class="view-panel" id="view-dashboard">
           <div class="page-heading">
             <div class="page-context">Blossom / Tổng quan / Tiến độ bài viết</div>
             <div class="title-and-action">

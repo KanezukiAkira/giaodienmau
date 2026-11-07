@@ -22,6 +22,7 @@
 @import url('components/toast.css');
 
 /* 4. Feature Views */
+@import url('views/login.css');
 @import url('views/dashboard.css');
 @import url('views/posts.css');
 @import url('views/editor.css');

@@ -13,6 +13,16 @@ import { renderUsersTable } from '../views/usersView.js';
 export function switchView(viewName) {
   state.currentView = viewName;
 
+  // Toggle auth-mode on app container for full-bleed Login view
+  const appContainer = document.getElementById("appContainer");
+  if (appContainer) {
+    if (viewName === "login") {
+      appContainer.classList.add("auth-mode");
+    } else {
+      appContainer.classList.remove("auth-mode");
+    }
+  }
+
   // Update panels
   document.querySelectorAll(".view-panel").forEach(panel => {
     panel.classList.remove("active");

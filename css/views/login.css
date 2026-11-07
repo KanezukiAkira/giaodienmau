@@ -1,45 +1,81 @@
 /* ==========================================================================
    VIEW: LOGIN — ĐĂNG NHẬP (Figma FR-01 Node 3:43531)
+   Exact canvas coordinates: 1440px × 1040px
+   - Left: Brand story (744px × 1040px, content width 616px)
+   - Right: Login area (696px × 1040px, content width 568px)
    ========================================================================== */
+
+/* Auth Mode: When login screen is active in index.html */
+.app-container.auth-mode .sidebar,
+.app-container.auth-mode .header {
+  display: none !important;
+}
+
+.app-container.auth-mode .workspace {
+  margin-left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  overflow: hidden !important;
+}
+
+.app-container.auth-mode .content-body {
+  padding: 0 !important;
+  height: 100vh !important;
+  max-width: 100vw !important;
+}
+
+.app-container.auth-mode #view-login {
+  display: block !important;
+  width: 100vw;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+}
 
 .login-page {
   display: flex;
   min-height: 100vh;
-  width: 100vw;
+  width: 100%;
   background-color: #ffffff;
   font-family: var(--font-sans);
   overflow-x: hidden;
+  box-sizing: border-box;
 }
 
-/* 1. Left Column: Brand Story (744px on 1440px canvas) */
+/* --------------------------------------------------------------------------
+   1. Left Column: Brand Story (744px / 1440px)
+   -------------------------------------------------------------------------- */
 .login-brand-col {
-  flex: 1.1;
-  background: linear-gradient(145deg, #fdf8fa 0%, #fbedf3 100%);
+  width: 51.6%; /* 744px / 1440px */
+  min-width: 560px;
+  background: linear-gradient(155deg, #fdf9fa 0%, #faedf3 100%);
   border-right: 1px solid #f2dfe7;
-  padding: 48px 64px;
+  padding: 50px 64px 32px 64px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   box-sizing: border-box;
-  position: relative;
 }
 
-.brand-col-top {
+.brand-col-inner {
+  width: 100%;
+  max-width: 616px;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 28px;
 }
 
 .brand-logo-wrap {
   display: flex;
   flex-direction: column;
+  margin-bottom: 30px;
 }
 
 .brand-logo-title {
   font-family: var(--font-serif);
   font-size: 32px;
   font-weight: 500;
-  color: var(--text-main);
+  color: #574b50;
   letter-spacing: -0.5px;
   line-height: 1.1;
 }
@@ -47,8 +83,8 @@
 .brand-logo-sub {
   font-size: 10px;
   font-weight: 600;
-  letter-spacing: 2.5px;
-  color: var(--primary);
+  letter-spacing: 2px;
+  color: #cc618a;
   text-transform: uppercase;
   margin-top: 4px;
 }
@@ -56,8 +92,8 @@
 .brand-intro-block {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  max-width: 580px;
+  gap: 10px;
+  margin-bottom: 24px;
 }
 
 .brand-promise-tag {
@@ -73,30 +109,36 @@
   font-size: 34px;
   font-weight: 400;
   color: #574b50;
-  line-height: 1.25;
-  letter-spacing: -0.3px;
+  line-height: 1.22;
+  letter-spacing: -0.4px;
+  margin: 0;
 }
 
 .brand-desc {
   font-size: 13.5px;
   color: #786b72;
   line-height: 1.6;
+  margin: 0;
 }
 
-/* Skincare Image Showcase */
+/* Skincare Still Life (616px × 411px) */
 .brand-image-card {
-  margin: 24px 0 16px;
-  border-radius: 14px;
+  width: 100%;
+  height: 411px;
+  border-radius: 12px;
   overflow: hidden;
   border: 1px solid #f2dfe7;
-  box-shadow: 0 12px 32px rgba(204, 97, 138, 0.08);
-  background: #ffffff;
+  box-shadow: 0 16px 36px rgba(204, 97, 138, 0.09);
+  background: #fcf6f8;
   position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .brand-image-card img {
   width: 100%;
-  height: 340px;
+  height: 100%;
   object-fit: cover;
   display: block;
 }
@@ -105,15 +147,16 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 4px 0;
+  padding: 10px 2px 0;
   font-size: 12px;
   color: #a4989d;
+  width: 100%;
 }
 
 .brand-image-sentiment {
   font-family: var(--font-serif);
   font-style: italic;
-  font-size: 13px;
+  font-size: 13.5px;
   color: #cc618a;
 }
 
@@ -123,14 +166,16 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  padding-top: 16px;
+  padding-top: 24px;
 }
 
-/* 2. Right Column: Login Area (696px on 1440px canvas) */
+/* --------------------------------------------------------------------------
+   2. Right Column: Login Area (696px / 1440px)
+   -------------------------------------------------------------------------- */
 .login-form-col {
-  flex: 1;
+  width: 48.4%; /* 696px / 1440px */
   background: #ffffff;
-  padding: 48px 64px;
+  padding: 48px 64px 32px 64px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -141,7 +186,7 @@
 
 .login-form-top {
   width: 100%;
-  max-width: 440px;
+  max-width: 568px; /* Figma 568px */
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -172,10 +217,10 @@
   height: 13px;
 }
 
-/* Center Sign In Container */
+/* Center Sign In Container (568px) */
 .login-form-box {
   width: 100%;
-  max-width: 440px;
+  max-width: 568px; /* Figma FR-01 width 568px */
   margin: 32px 0;
   display: flex;
   flex-direction: column;
@@ -183,8 +228,8 @@
 }
 
 .login-symbol {
-  width: 48px;
-  height: 48px;
+  width: 50px;
+  height: 50px;
   border-radius: 12px;
   background: #fdedf2;
   color: #cc618a;
@@ -194,8 +239,8 @@
 }
 
 .login-symbol svg {
-  width: 24px;
-  height: 24px;
+  width: 25px;
+  height: 25px;
 }
 
 .login-welcome-title {
@@ -203,7 +248,7 @@
   font-size: 28px;
   font-weight: 500;
   color: #574b50;
-  margin-bottom: 6px;
+  margin: 0 0 6px 0;
   line-height: 1.2;
 }
 
@@ -211,13 +256,14 @@
   font-size: 13px;
   color: #a4989d;
   line-height: 1.5;
+  margin: 0;
 }
 
 /* Form Fields */
 .login-fields {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 18px;
 }
 
 .login-field-group {
@@ -236,6 +282,7 @@
   position: relative;
   display: flex;
   align-items: center;
+  width: 100%;
 }
 
 .login-input-icon {
@@ -294,12 +341,13 @@
   height: 16px;
 }
 
-/* Options Row */
+/* Options Row (Figma: Remember me on left, Forgot password on right at x=483) */
 .login-options-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
   font-size: 12.5px;
+  width: 100%;
 }
 
 .remember-label {
@@ -329,7 +377,7 @@
   text-decoration: underline;
 }
 
-/* Submit Button */
+/* Submit Button: 568px × 44px, arrow-right on left, centered */
 .btn-login-submit {
   width: 100%;
   height: 44px;
@@ -343,7 +391,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 10px;
   transition: all 0.2s ease;
   box-shadow: 0 4px 12px rgba(204, 97, 138, 0.25);
   font-family: var(--font-sans);
@@ -360,49 +408,7 @@
   height: 16px;
 }
 
-/* Quick Fill Demo Accounts */
-.demo-accounts-bar {
-  background: #faf7f9;
-  border: 1px dashed #f2dfe7;
-  border-radius: 8px;
-  padding: 10px 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.demo-accounts-title {
-  font-size: 10.5px;
-  font-weight: 600;
-  color: #cc618a;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.demo-account-pills {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-
-.demo-account-pill {
-  background: #ffffff;
-  border: 1px solid #f2dfe7;
-  border-radius: 100px;
-  padding: 3px 10px;
-  font-size: 11px;
-  color: #574b50;
-  cursor: pointer;
-  transition: all 0.15s;
-}
-
-.demo-account-pill:hover {
-  border-color: #cc618a;
-  color: #cc618a;
-  background: #fdedf2;
-}
-
-/* Internal Notice Box */
+/* Internal Notice Box (Figma FR-01 Node 3:43578) */
 .login-internal-notice {
   background: #fff8fa;
   border: 1px solid #f2dfe7;
@@ -414,20 +420,24 @@
   font-size: 11.5px;
   color: #786b72;
   line-height: 1.5;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .login-internal-notice svg {
-  width: 16px;
-  height: 16px;
+  width: 15px;
+  height: 15px;
   color: #cc618a;
   flex-shrink: 0;
   margin-top: 1px;
 }
 
+/* Contact Administrator */
 .login-contact-admin {
   text-align: center;
   font-size: 12px;
   color: #a4989d;
+  width: 100%;
 }
 
 .login-contact-admin a {
@@ -440,10 +450,10 @@
   text-decoration: underline;
 }
 
-/* Bottom Footer */
+/* Bottom Footer (Figma FR-01 Node 3:43582) */
 .login-form-bottom {
   width: 100%;
-  max-width: 440px;
+  max-width: 568px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -462,14 +472,20 @@
 }
 
 /* Responsive */
-@media (max-width: 992px) {
+@media (max-width: 1100px) {
   .login-page {
     flex-direction: column;
   }
   .login-brand-col {
-    display: none;
+    width: 100%;
+    min-width: 0;
+    padding: 32px 24px;
+  }
+  .brand-image-card {
+    height: 280px;
   }
   .login-form-col {
-    padding: 32px 20px;
+    width: 100%;
+    padding: 32px 24px;
   }
 }
