@@ -1,0 +1,39 @@
+/* CSS Variables — Extracted from Figma Design (File: lZGM9w6DLqe4AaBvvCdyou) */
+:root {
+  --bg-app: #fff8fa;
+  --bg-sidebar: #fdedf2;
+  --border-color: #f2dfe7;
+  --border-light: #faedf4;
+  --primary: #cc618a;
+  --primary-hover: #b85077;
+  --primary-light: #f9dfe9;
+  --primary-subtle: #fdedf2;
+  --text-main: #574b50;
+  --text-muted: #a4989d;
+  --text-light: #c2b8bd;
+  --white: #ffffff;
+
+  --status-published-bg: #ebf6ef;
+  --status-published-text: #69a68e;
+  --status-pending-bg: #fff2e4;
+  --status-pending-text: #c39359;
+  --status-draft-bg: #f3edf8;
+  --status-draft-text: #9a83b2;
+  --status-scheduled-bg: #ebf6ef;
+  --status-scheduled-text: #69a68e;
+  --status-danger-bg: #fdeeed;
+  --status-danger-text: #d9534f;
+
+  --font-serif: 'Playfair Display', Georgia, serif;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-pill: 100px;
+
+  --shadow-sm: 0 1px 3px rgba(87, 75, 80, 0.05);
+  --shadow-md: 0 4px 14px rgba(204, 97, 138, 0.09);
+  --shadow-lg: 0 12px 30px rgba(87, 75, 80, 0.12);
+}

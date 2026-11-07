@@ -1,0 +1,53 @@
+/**
+ * View Router: SPA Screen Switching
+ */
+import { state } from './state.js';
+import { closeAllDropdowns } from '../components/dropdown.js';
+import { renderKanbanBoard } from '../views/dashboardView.js';
+import { renderPostsTable } from '../views/postsView.js';
+import { renderCalendar } from '../views/calendarView.js';
+import { renderApprovalView } from '../views/approvalsView.js';
+import { renderNotificationsList } from '../views/notificationsView.js';
+import { renderUsersTable } from '../views/usersView.js';
+
+export function switchView(viewName) {
+  state.currentView = viewName;
+
+  // Update panels
+  document.querySelectorAll(".view-panel").forEach(panel => {
+    panel.classList.remove("active");
+  });
+  const targetPanel = document.getElementById(`view-${viewName}`);
+  if (targetPanel) {
+    targetPanel.classList.add("active");
+  }
+
+  // Update Sidebar active state
+  document.querySelectorAll(".nav-item").forEach(item => {
+    if (item.getAttribute("data-view") === viewName) {
+      item.classList.add("active");
+    } else {
+      item.classList.remove("active");
+    }
+  });
+
+  // Close any popovers
+  closeAllDropdowns();
+
+  // View specific refreshes
+  if (viewName === "dashboard") {
+    renderKanbanBoard();
+  } else if (viewName === "posts") {
+    renderPostsTable();
+  } else if (viewName === "calendar") {
+    renderCalendar();
+  } else if (viewName === "approvals") {
+    renderApprovalView(state.activeApprovalPostId);
+  } else if (viewName === "notifications") {
+    renderNotificationsList();
+  } else if (viewName === "users") {
+    renderUsersTable();
+  }
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}

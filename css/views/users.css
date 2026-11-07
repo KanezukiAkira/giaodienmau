@@ -1,0 +1,363 @@
+/* ==========================================================================
+   VIEW: USER MANAGEMENT & PERMISSIONS (Figma FR-03)
+   ========================================================================== */
+
+.user-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  width: 100%;
+  margin-bottom: 22px;
+}
+
+.user-metric-card {
+  background: #ffffff;
+  border: 1px solid #f2dfe7;
+  border-radius: 12px;
+  padding: 18px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  box-sizing: border-box;
+}
+
+.user-metric-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: #fdedf2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: #cc618a;
+}
+
+.user-metric-icon svg {
+  width: 18px;
+  height: 18px;
+}
+
+.user-metric-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.user-metric-value-row {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.user-metric-number {
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 23px;
+  color: #574b50;
+  line-height: 1;
+}
+
+.user-metric-label {
+  font-size: 10px;
+  color: #a4989d;
+  font-weight: 400;
+}
+
+.user-metric-desc {
+  font-size: 9px;
+  color: #a4989d;
+}
+
+/* 2-Column Account Management Layout */
+.account-management-layout {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 20px;
+  width: 100%;
+  margin-bottom: 22px;
+}
+
+.account-table-card {
+  background: #ffffff;
+  border: 1px solid #f2dfe7;
+  border-radius: 14px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  box-sizing: border-box;
+}
+
+.account-card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.account-card-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #574b50;
+}
+
+.account-count-badge {
+  background: #f9dfe9;
+  color: #cc618a;
+  border-radius: 100px;
+  padding: 3px 10px;
+  font-size: 11px;
+}
+
+.account-filters-row {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+}
+
+.account-search-box {
+  flex: 1;
+  height: 36px;
+  border: 1px solid #f2dfe7;
+  border-radius: 6px;
+  padding: 0 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #ffffff;
+}
+
+.account-search-box svg {
+  width: 14px;
+  height: 14px;
+  color: #a4989d;
+}
+
+.account-search-box input {
+  border: none;
+  outline: none;
+  width: 100%;
+  font-size: 11px;
+  color: #574b50;
+}
+
+.account-filter-select {
+  height: 36px;
+  border: 1px solid #f2dfe7;
+  border-radius: 6px;
+  padding: 0 12px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #cc618a;
+  background: #ffffff;
+  cursor: pointer;
+}
+
+/* Account Details Side Card */
+.account-detail-card {
+  background: #ffffff;
+  border: 1px solid #f2dfe7;
+  border-radius: 16px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-sizing: border-box;
+  align-self: start;
+}
+
+.account-detail-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.account-detail-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #574b50;
+}
+
+.account-selected-profile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.profile-avatar-lg {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #f9dfe9;
+  color: #cc618a;
+  font-size: 12px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.profile-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.profile-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: #574b50;
+}
+
+.profile-email {
+  font-size: 10px;
+  color: #a4989d;
+}
+
+.toggle-permission-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.toggle-switch {
+  width: 32px;
+  height: 18px;
+  border-radius: 100px;
+  background: #cc618a;
+  position: relative;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.toggle-switch::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #ffffff;
+  transition: transform 0.2s;
+}
+
+.toggle-switch.off {
+  background: #e4d7dc;
+}
+
+.toggle-switch.off::after {
+  transform: translateX(-14px);
+}
+
+.security-actions-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  padding-top: 4px;
+}
+
+.security-link {
+  color: #cc618a;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.security-link.muted {
+  color: #a4989d;
+}
+
+.security-link.danger {
+  color: #c75c78;
+}
+
+/* Permissions Matrix Card */
+.permissions-matrix-card {
+  background: #ffffff;
+  border: 1px solid #f2dfe7;
+  border-radius: 16px;
+  padding: 22px;
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 32px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.matrix-guide {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.matrix-guide-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #574b50;
+}
+
+.matrix-guide-title svg {
+  width: 18px;
+  height: 18px;
+  color: #cc618a;
+}
+
+.matrix-guide p {
+  font-size: 11px;
+  color: #a4989d;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.matrix-guide-legend {
+  font-size: 10px;
+  color: #69a68e;
+  font-weight: 500;
+  margin-top: 4px;
+}
+
+.matrix-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 10px;
+}
+
+.matrix-table th {
+  text-align: left;
+  padding: 8px 12px;
+  border-bottom: 1px solid #f2dfe7;
+  color: #cc618a;
+  font-weight: 600;
+}
+
+.matrix-table th:first-child {
+  color: #a4989d;
+  font-weight: 500;
+  width: 40%;
+}
+
+.matrix-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid #f2dfe7;
+  color: #69a68e;
+  font-weight: 500;
+}
+
+.matrix-table td.dim {
+  color: #a4989d;
+}
+
+@media (max-width: 1100px) {
+  .user-metrics-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .account-management-layout {
+    grid-template-columns: 1fr;
+  }
+  .permissions-matrix-card {
+    grid-template-columns: 1fr;
+  }
+}

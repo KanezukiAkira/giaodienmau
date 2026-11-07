@@ -1,0 +1,291 @@
+/* View: Statistics Dashboard (Figma FR-15) */
+.charts-row {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 22px;
+  margin-bottom: 22px;
+}
+
+.chart-card-main,
+.chart-card-side {
+  margin-bottom: 0;
+}
+
+.chart-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.chart-subtitle {
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.chart-kpi {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 6px 0;
+}
+
+.kpi-num {
+  font-family: var(--font-serif);
+  font-size: 28px;
+  color: var(--text-main);
+}
+
+.svg-chart-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  position: relative;
+}
+
+.chart-axes-and-plot {
+  display: flex;
+  gap: 12px;
+  align-items: stretch;
+  width: 100%;
+}
+
+.chart-value-axis {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 190px;
+  padding: 6px 0 8px;
+  box-sizing: border-box;
+  font-family: 'Inter', sans-serif;
+  font-size: 9px;
+  color: #a4989d;
+  width: 24px;
+  text-align: right;
+  flex-shrink: 0;
+  user-select: none;
+}
+
+.chart-plot-area {
+  flex: 1;
+  position: relative;
+  height: 190px;
+}
+
+.trend-chart-svg {
+  width: 100%;
+  height: 190px;
+  overflow: visible;
+}
+
+.chart-point {
+  cursor: pointer;
+  transition: r 0.15s ease, stroke-width 0.15s;
+}
+
+.chart-point:hover {
+  r: 6.5;
+  stroke-width: 3.5;
+}
+
+.month-labels {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 10px 0 36px;
+  font-size: 10px;
+  color: #a4989d;
+  box-sizing: border-box;
+}
+
+.chart-floating-tooltip {
+  position: absolute;
+  display: none;
+  background: #574b50;
+  color: #ffffff;
+  padding: 5px 9px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 500;
+  pointer-events: none;
+  transform: translate(-50%, -100%);
+  margin-top: -10px;
+  white-space: nowrap;
+  box-shadow: 0 4px 14px rgba(87, 75, 80, 0.2);
+  z-index: 10;
+}
+
+.chart-floating-tooltip::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 4px 4px 0;
+  border-style: solid;
+  border-color: #574b50 transparent;
+  display: block;
+  width: 0;
+}
+
+/* Donut Chart */
+.donut-container {
+  position: relative;
+  width: 170px;
+  height: 170px;
+  margin: 10px auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.donut-svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.donut-center-text {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.donut-num {
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.donut-sub {
+  font-size: 9px;
+  color: var(--text-muted);
+}
+
+.channel-metrics {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.channel-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+}
+
+.color-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.color-dot.fb {
+  background-color: var(--primary);
+}
+
+.color-dot.ig {
+  background-color: var(--primary-light);
+}
+
+.channel-name {
+  flex: 1;
+  color: var(--text-main);
+}
+
+.channel-count {
+  font-weight: 500;
+  color: var(--text-main);
+}
+
+.channel-pct {
+  font-size: 10px;
+  color: var(--text-muted);
+  width: 30px;
+  text-align: right;
+}
+
+/* Notifications feed and settings swatches */
+.notif-feed-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.notif-feed-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 16px;
+  border-bottom: 1px solid var(--border-light);
+  transition: background 0.15s;
+}
+
+.notif-feed-item:last-child {
+  border-bottom: none;
+}
+
+.notif-feed-item:hover {
+  background-color: #fffbfa;
+}
+
+.notif-feed-item.unread {
+  background-color: #fff5f8;
+}
+
+.notif-feed-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--primary-light);
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.notif-feed-icon svg {
+  width: 18px;
+  height: 18px;
+}
+
+.notif-feed-content {
+  flex: 1;
+}
+
+.notif-feed-content h4 {
+  font-size: 13px;
+  color: var(--text-main);
+  margin-bottom: 4px;
+}
+
+.notif-feed-content p {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.notif-feed-time {
+  font-size: 10px;
+  color: var(--text-light);
+  margin-top: 6px;
+  display: block;
+}
+
+.palette-preview {
+  display: flex;
+  gap: 8px;
+}
+
+.palette-swatch {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+}

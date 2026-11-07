@@ -1,0 +1,43 @@
+/* ==========================================================================
+   BLOSSOM BEAUTY STORE — MASTER STYLESHEET
+   Aggregates all modular style layers in logical order
+   ========================================================================== */
+
+/* 1. Base Layer */
+@import url('base/variables.css');
+@import url('base/reset.css');
+@import url('base/typography.css');
+
+/* 2. Layout Layer */
+@import url('layout/layout.css');
+@import url('layout/sidebar.css');
+@import url('layout/header.css');
+
+/* 3. Reusable Components */
+@import url('components/buttons.css');
+@import url('components/cards.css');
+@import url('components/forms.css');
+@import url('components/tables.css');
+@import url('components/modals.css');
+@import url('components/toast.css');
+
+/* 4. Feature Views */
+@import url('views/dashboard.css');
+@import url('views/posts.css');
+@import url('views/editor.css');
+@import url('views/calendar.css');
+@import url('views/approvals.css');
+@import url('views/statistics.css');
+@import url('views/users.css');
+
+/* 5. Responsive Breakpoints */
+@media (max-width: 1200px) {
+  .editorial-grid,
+  .charts-row,
+  .kanban-board {
+    grid-template-columns: 1fr;
+  }
+  .metrics-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

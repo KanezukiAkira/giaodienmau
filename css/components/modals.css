@@ -1,0 +1,391 @@
+/* ==========================================================================
+   MODALS & DIALOGS (Figma FR-06, FR-08, FR-10)
+   ========================================================================== */
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(73, 52, 59, 0.4);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 20px;
+  box-sizing: border-box;
+  animation: modalFadeIn 0.2s ease-out;
+}
+
+.modal-backdrop.show {
+  display: flex;
+}
+
+@keyframes modalFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes modalPopIn {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Figma Dialog Box: 560px, rounded-[18px], p-[32px], gap-[20px] */
+.modal-dialog,
+.figma-dialog {
+  width: 560px;
+  max-width: 100%;
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 32px;
+  box-shadow: 0px 10px 32px 0px rgba(104, 70, 83, 0.09);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  box-sizing: border-box;
+  animation: modalPopIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Dialog Header: Symbol square (46x46) + Close button (18px) */
+.dialog-header-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.dialog-symbol {
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  background: #fdedf2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.dialog-symbol.danger svg {
+  color: #c75c78;
+}
+
+.dialog-symbol.primary svg {
+  color: #cc618a;
+}
+
+.dialog-symbol svg {
+  width: 24px;
+  height: 24px;
+}
+
+.dialog-close-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 6px;
+  color: #a4989d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.dialog-close-btn:hover {
+  background: #fdedf2;
+  color: #574b50;
+}
+
+.dialog-close-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* Dialog Introduction: Title in Playfair Display (27px), Subtitle in Inter (13px) */
+.dialog-intro {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+.dialog-intro h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 27px;
+  font-weight: 400;
+  color: #574b50;
+  margin: 0;
+  line-height: 1.25;
+}
+
+.dialog-intro p {
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  color: #a4989d;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Deletion Target / Summary Card (Figma: bg-[#fff8fa], rounded-[10px], p-[18px], gap-[8px]) */
+.dialog-target-card {
+  background: #fff8fa;
+  border-radius: 10px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.dialog-target-tag {
+  font-family: 'Inter', sans-serif;
+  font-size: 10px;
+  font-weight: 500;
+  color: #a4989d;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.dialog-target-title {
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: #574b50;
+  line-height: 1.4;
+  margin: 0;
+}
+
+.dialog-target-meta {
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  color: #a4989d;
+  line-height: 1.4;
+}
+
+/* Warning & Info Row (Figma: gap-[10px], text-[#cc618a], text-[11px]) */
+.dialog-warning-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  width: 100%;
+}
+
+.dialog-warning-row svg {
+  width: 16px;
+  height: 16px;
+  color: #cc618a;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.dialog-warning-text {
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  color: #cc618a;
+  line-height: 1.5;
+  margin: 0;
+  flex: 1;
+}
+
+/* Divider (Figma: bg-[#f2dfe7], h-px) */
+.dialog-divider {
+  height: 1px;
+  background: #f2dfe7;
+  width: 100%;
+  margin: 0;
+}
+
+/* Dialog Action Buttons (Figma: gap-[12px], justify-end) */
+.dialog-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  width: 100%;
+}
+
+.btn-dialog-secondary {
+  background: #ffffff;
+  border: 1px solid #f2dfe7;
+  border-radius: 6px;
+  padding: 11px 18px;
+  color: #cc618a;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-dialog-secondary:hover {
+  background: #fdedf2;
+}
+
+.btn-dialog-danger {
+  background: #c75c78;
+  border: none;
+  border-radius: 6px;
+  padding: 11px 18px;
+  color: #ffffff;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-dialog-danger:hover {
+  background: #b54964;
+}
+
+.btn-dialog-primary {
+  background: #cc618a;
+  border: none;
+  border-radius: 6px;
+  padding: 11px 18px;
+  color: #ffffff;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-dialog-primary:hover {
+  background: #ba5178;
+}
+
+/* Revision Decision Pills (FR-10) */
+.dialog-decision-grid {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+}
+
+.dialog-decision-pill {
+  flex: 1;
+  padding: 12px;
+  border-radius: 6px;
+  border: 1px solid #f2dfe7;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #574b50;
+  cursor: pointer;
+  background: #ffffff;
+  transition: all 0.2s;
+}
+
+.dialog-decision-pill.active {
+  background: #fdedf2;
+  border-color: #cc618a;
+  color: #cc618a;
+}
+
+.dialog-decision-pill svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+/* Dialog Form Groups */
+.dialog-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+.dialog-form-group label {
+  font-size: 12px;
+  color: #574b50;
+  font-weight: 500;
+}
+
+.dialog-input {
+  width: 100%;
+  border: 1px solid #f2dfe7;
+  border-radius: 6px;
+  padding: 10px 12px;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  color: #574b50;
+  box-sizing: border-box;
+  background: #ffffff;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.dialog-input:focus {
+  border-color: #cc618a;
+}
+
+.dialog-textarea {
+  width: 100%;
+  border: 1px solid #f2dfe7;
+  border-radius: 6px;
+  padding: 12px 14px;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  color: #574b50;
+  box-sizing: border-box;
+  background: #ffffff;
+  outline: none;
+  min-height: 110px;
+  resize: vertical;
+  line-height: 1.5;
+  transition: border-color 0.2s;
+}
+
+.dialog-textarea:focus {
+  border-color: #cc618a;
+}
+
+.dialog-input-with-icon {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid #f2dfe7;
+  border-radius: 6px;
+  padding: 0 12px;
+  background: #ffffff;
+}
+
+.dialog-input-with-icon svg {
+  width: 16px;
+  height: 16px;
+  color: #a4989d;
+  flex-shrink: 0;
+}
+
+.dialog-input-with-icon input {
+  border: none;
+  outline: none;
+  width: 100%;
+  padding: 10px 0;
+  font-size: 13px;
+  color: #574b50;
+  background: transparent;
+}
+
+.dialog-help-text {
+  font-size: 11px;
+  color: #a4989d;
+  line-height: 1.5;
+  margin: 0;
+}

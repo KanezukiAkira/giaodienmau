@@ -1,0 +1,21 @@
+{
+  "name": "blossom-beauty-store",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Blossom Beauty Store - Editorial & Content Management System UI",
+  "main": "js/main.js",
+  "scripts": {
+    "start": "npx live-server --port=5500 --open=index.html",
+    "dev": "npx live-server --port=5500 --open=index.html",
+    "serve": "npx serve .",
+    "test": "node tests/test_modular.mjs"
+  },
+  "keywords": [
+    "blossom",
+    "figma-to-code",
+    "vanilla-js",
+    "es-modules"
+  ],
+  "author": "",
+  "license": "ISC"
+}

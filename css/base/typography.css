@@ -1,0 +1,22 @@
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.font-serif {
+  font-family: var(--font-serif);
+}
+
+.font-sans {
+  font-family: var(--font-sans);
+}
+
+.text-success {
+  color: var(--status-published-text);
+  font-weight: 500;
+}
+
+.text-danger {
+  color: #d9534f;
+}

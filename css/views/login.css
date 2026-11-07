@@ -1,0 +1,475 @@
+/* ==========================================================================
+   VIEW: LOGIN — ĐĂNG NHẬP (Figma FR-01 Node 3:43531)
+   ========================================================================== */
+
+.login-page {
+  display: flex;
+  min-height: 100vh;
+  width: 100vw;
+  background-color: #ffffff;
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+}
+
+/* 1. Left Column: Brand Story (744px on 1440px canvas) */
+.login-brand-col {
+  flex: 1.1;
+  background: linear-gradient(145deg, #fdf8fa 0%, #fbedf3 100%);
+  border-right: 1px solid #f2dfe7;
+  padding: 48px 64px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.brand-col-top {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.brand-logo-wrap {
+  display: flex;
+  flex-direction: column;
+}
+
+.brand-logo-title {
+  font-family: var(--font-serif);
+  font-size: 32px;
+  font-weight: 500;
+  color: var(--text-main);
+  letter-spacing: -0.5px;
+  line-height: 1.1;
+}
+
+.brand-logo-sub {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 2.5px;
+  color: var(--primary);
+  text-transform: uppercase;
+  margin-top: 4px;
+}
+
+.brand-intro-block {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 580px;
+}
+
+.brand-promise-tag {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  color: #cc618a;
+  text-transform: uppercase;
+}
+
+.brand-headline {
+  font-family: var(--font-serif);
+  font-size: 34px;
+  font-weight: 400;
+  color: #574b50;
+  line-height: 1.25;
+  letter-spacing: -0.3px;
+}
+
+.brand-desc {
+  font-size: 13.5px;
+  color: #786b72;
+  line-height: 1.6;
+}
+
+/* Skincare Image Showcase */
+.brand-image-card {
+  margin: 24px 0 16px;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid #f2dfe7;
+  box-shadow: 0 12px 32px rgba(204, 97, 138, 0.08);
+  background: #ffffff;
+  position: relative;
+}
+
+.brand-image-card img {
+  width: 100%;
+  height: 340px;
+  object-fit: cover;
+  display: block;
+}
+
+.brand-image-caption {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 4px 0;
+  font-size: 12px;
+  color: #a4989d;
+}
+
+.brand-image-sentiment {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 13px;
+  color: #cc618a;
+}
+
+.brand-col-bottom {
+  font-size: 11.5px;
+  color: #a4989d;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-top: 16px;
+}
+
+/* 2. Right Column: Login Area (696px on 1440px canvas) */
+.login-form-col {
+  flex: 1;
+  background: #ffffff;
+  padding: 48px 64px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+.login-form-top {
+  width: 100%;
+  max-width: 440px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.login-context-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #a4989d;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+}
+
+.connection-secure-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #ebf6ef;
+  color: #2e7d32;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: 100px;
+}
+
+.connection-secure-badge svg {
+  width: 13px;
+  height: 13px;
+}
+
+/* Center Sign In Container */
+.login-form-box {
+  width: 100%;
+  max-width: 440px;
+  margin: 32px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.login-symbol {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: #fdedf2;
+  color: #cc618a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-symbol svg {
+  width: 24px;
+  height: 24px;
+}
+
+.login-welcome-title {
+  font-family: var(--font-serif);
+  font-size: 28px;
+  font-weight: 500;
+  color: #574b50;
+  margin-bottom: 6px;
+  line-height: 1.2;
+}
+
+.login-welcome-sub {
+  font-size: 13px;
+  color: #a4989d;
+  line-height: 1.5;
+}
+
+/* Form Fields */
+.login-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.login-field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.login-field-group label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #574b50;
+}
+
+.login-input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.login-input-icon {
+  position: absolute;
+  left: 14px;
+  color: #a4989d;
+  display: flex;
+  align-items: center;
+  pointer-events: none;
+}
+
+.login-input-icon svg {
+  width: 16px;
+  height: 16px;
+}
+
+.login-input-wrap input {
+  width: 100%;
+  height: 44px;
+  background: #ffffff;
+  border: 1px solid #f2dfe7;
+  border-radius: 8px;
+  padding: 0 42px 0 42px;
+  font-size: 13.5px;
+  color: #574b50;
+  font-family: var(--font-sans);
+  outline: none;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+.login-input-wrap input:focus {
+  border-color: #cc618a;
+  box-shadow: 0 0 0 3px rgba(204, 97, 138, 0.12);
+}
+
+.login-toggle-eye {
+  position: absolute;
+  right: 14px;
+  background: none;
+  border: none;
+  color: #a4989d;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  transition: color 0.15s;
+}
+
+.login-toggle-eye:hover {
+  color: #cc618a;
+}
+
+.login-toggle-eye svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* Options Row */
+.login-options-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12.5px;
+}
+
+.remember-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #574b50;
+  cursor: pointer;
+  user-select: none;
+}
+
+.remember-label input[type="checkbox"] {
+  accent-color: #cc618a;
+  width: 15px;
+  height: 15px;
+  cursor: pointer;
+}
+
+.forgot-link {
+  color: #cc618a;
+  text-decoration: none;
+  font-weight: 500;
+  transition: opacity 0.15s;
+}
+
+.forgot-link:hover {
+  text-decoration: underline;
+}
+
+/* Submit Button */
+.btn-login-submit {
+  width: 100%;
+  height: 44px;
+  background: #cc618a;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(204, 97, 138, 0.25);
+  font-family: var(--font-sans);
+}
+
+.btn-login-submit:hover {
+  background: #b54f76;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(204, 97, 138, 0.32);
+}
+
+.btn-login-submit svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* Quick Fill Demo Accounts */
+.demo-accounts-bar {
+  background: #faf7f9;
+  border: 1px dashed #f2dfe7;
+  border-radius: 8px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.demo-accounts-title {
+  font-size: 10.5px;
+  font-weight: 600;
+  color: #cc618a;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.demo-account-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.demo-account-pill {
+  background: #ffffff;
+  border: 1px solid #f2dfe7;
+  border-radius: 100px;
+  padding: 3px 10px;
+  font-size: 11px;
+  color: #574b50;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.demo-account-pill:hover {
+  border-color: #cc618a;
+  color: #cc618a;
+  background: #fdedf2;
+}
+
+/* Internal Notice Box */
+.login-internal-notice {
+  background: #fff8fa;
+  border: 1px solid #f2dfe7;
+  border-radius: 8px;
+  padding: 12px 14px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 11.5px;
+  color: #786b72;
+  line-height: 1.5;
+}
+
+.login-internal-notice svg {
+  width: 16px;
+  height: 16px;
+  color: #cc618a;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.login-contact-admin {
+  text-align: center;
+  font-size: 12px;
+  color: #a4989d;
+}
+
+.login-contact-admin a {
+  color: #cc618a;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.login-contact-admin a:hover {
+  text-decoration: underline;
+}
+
+/* Bottom Footer */
+.login-form-bottom {
+  width: 100%;
+  max-width: 440px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11.5px;
+  color: #a4989d;
+  padding-top: 16px;
+}
+
+.login-form-bottom a {
+  color: #a4989d;
+  text-decoration: none;
+}
+
+.login-form-bottom a:hover {
+  color: #cc618a;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .login-page {
+    flex-direction: column;
+  }
+  .login-brand-col {
+    display: none;
+  }
+  .login-form-col {
+    padding: 32px 20px;
+  }
+}
