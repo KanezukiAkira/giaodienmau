@@ -1,4 +1,4 @@
-/* View: Dashboard & Kanban Progress (Figma FR-13 Node 3:45735) */
+/* View: Dashboard & Kanban Progress (Node 3:45735) */
 
 .board-toolbar {
   display: flex;
@@ -166,7 +166,7 @@
   min-height: 140px;
 }
 
-/* Kanban Card (Figma FR-13 Node 3:45843) */
+/* Kanban Card (Node 3:45843) */
 .kanban-card {
   background: #ffffff;
   border: 1px solid #f2dfe7;
@@ -346,7 +346,7 @@
   color: #cc618a;
 }
 
-/* Priority Insight Card (Figma FR-13 Node 3:46006) */
+/* Priority Insight Card (Node 3:46006) */
 .priority-insight-card {
   background: #ffffff;
   border: 1px solid #f2dfe7;

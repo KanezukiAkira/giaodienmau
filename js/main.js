@@ -237,7 +237,7 @@ function initApp() {
   setupKanbanDragDrop();
   initChartTooltips();
 
-  // Authentication check: If not logged in, show Login view first (Figma FR-01)
+  // Authentication check: If not logged in, show Login view first ()
   const isLoggedIn = (typeof sessionStorage !== "undefined") && sessionStorage.getItem("blossom_logged_in") === "true";
   if (!isLoggedIn) {
     switchView("login");

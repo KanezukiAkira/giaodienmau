@@ -1,5 +1,5 @@
 /**
- * View: Editorial Calendar (Figma FR-11)
+ * View: Editorial Calendar ()
  */
 import { state } from '../core/state.js';
 import { escapeHTML } from '../utils/formatters.js';

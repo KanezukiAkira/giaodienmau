@@ -1,5 +1,5 @@
 /**
- * View: Post Approval Detail (Figma FR-09)
+ * View: Post Approval Detail ()
  */
 import { state, saveState } from '../core/state.js';
 import { escapeHTML } from '../utils/formatters.js';

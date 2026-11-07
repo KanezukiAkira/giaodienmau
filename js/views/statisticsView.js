@@ -1,5 +1,5 @@
 /**
- * View: Statistics & Reporting (Figma FR-15)
+ * View: Statistics & Reporting ()
  */
 import { state } from '../core/state.js';
 import { showToast } from '../components/toast.js';

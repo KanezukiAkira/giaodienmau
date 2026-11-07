@@ -1,10 +1,10 @@
 /**
- * Modals Controller (Figma FR-06, FR-08, FR-10)
+ * Modals Controller (, , )
  */
 import { state, saveState } from '../core/state.js';
 import { showToast } from './toast.js';
 
-// --- FR-06: Delete Confirmation Modal ---
+// --- : Delete Confirmation Modal ---
 export function openDeleteModal(postId) {
   state.deleteTargetPostId = postId;
   const post = state.posts.find(p => p.id === postId);
@@ -45,7 +45,7 @@ export function confirmDeletePost() {
   }
 }
 
-// --- FR-10: Revision / Rejection Modal ---
+// --- : Revision / Rejection Modal ---
 export function openRevisionModal() {
   const post = state.posts.find(p => p.id === state.activeApprovalPostId) || state.posts[0];
   if (post) {
@@ -92,7 +92,7 @@ export function submitRevisionFeedback() {
   showToast(isReject ? `Đã từ chối bài viết ${post.id}!` : `Đã gửi yêu cầu chỉnh sửa bài viết ${post.id} tới tác giả!`, "info");
 }
 
-// --- FR-08: Submit for Approval Modal ---
+// --- : Submit for Approval Modal ---
 export function openSubmitApprovalModal() {
   document.getElementById("submitApprovalModal")?.classList.add("show");
 }
@@ -108,7 +108,7 @@ export function confirmSubmitPostForApproval() {
   }
 }
 
-// --- FR-03: Add User Modal ---
+// --- : Add User Modal ---
 export function openAddUserModal() {
   document.getElementById("addUserModal")?.classList.add("show");
 }

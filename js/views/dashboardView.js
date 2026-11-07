@@ -1,5 +1,5 @@
 /**
- * View: Dashboard / Kanban Progress Board (Figma FR-13 Node 3:45735)
+ * View: Dashboard / Kanban Progress Board (Node 3:45735)
  */
 import { state, saveState } from '../core/state.js';
 import { escapeHTML } from '../utils/formatters.js';

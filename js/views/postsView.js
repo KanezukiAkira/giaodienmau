@@ -1,5 +1,5 @@
 /**
- * View: Post Management (Figma FR-07)
+ * View: Post Management ()
  */
 import { state } from '../core/state.js';
 import { escapeHTML } from '../utils/formatters.js';

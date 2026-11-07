@@ -754,7 +754,7 @@ body {
 }
 
 /* ==========================================================================
-   METRIC CARDS (FR-07 & FR-15)
+   METRIC CARDS (& )
    ========================================================================== */
 .metrics-grid {
   display: grid;
@@ -1157,7 +1157,7 @@ body {
 }
 
 /* ==========================================================================
-   VIEW 2: EDITORIAL & CREATE POST (FR-04 / FR-05)
+   VIEW 2: EDITORIAL & CREATE POST (/ )
    ========================================================================== */
 .editorial-grid {
   display: grid;
@@ -1387,7 +1387,7 @@ body {
 }
 
 /* ==========================================================================
-   VIEW 3: CALENDAR (FR-11)
+   VIEW 3: CALENDAR ()
    ========================================================================== */
 .calendar-toolbar {
   display: flex;
@@ -1566,7 +1566,7 @@ body {
 }
 
 /* ==========================================================================
-   VIEW 4: APPROVAL DETAIL (FR-09)
+   VIEW 4: APPROVAL DETAIL ()
    ========================================================================== */
 .article-meta-header {
   display: flex;
@@ -1715,7 +1715,7 @@ body {
 }
 
 /* ==========================================================================
-   VIEW 5: STATISTICS DASHBOARD (FR-15)
+   VIEW 5: STATISTICS DASHBOARD ()
    ========================================================================== */
 .charts-row {
   display: grid;
@@ -2161,7 +2161,7 @@ body {
   to { opacity: 0; transform: translateY(10px); }
 }
 
-/* Kanban Board Styles (Figma FR-13) */
+/* Kanban Board Styles () */
 .board-toolbar {
   display: flex;
   align-items: center;

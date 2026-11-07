@@ -344,7 +344,7 @@ function switchView(viewName) {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// --- VIEW 0: Kanban Progress Dashboard (FR-13) Logic ---
+// --- VIEW 0: Kanban Progress Dashboard () Logic ---
 let draggedPostId = null;
 
 function setBoardTab(tab) {
@@ -1002,7 +1002,7 @@ function createCalendarCell(dayNum, isOtherMonth, isToday = false, posts = [], d
   return cell;
 }
 
-// --- VIEW 4: Approval Detail (FR-09) Logic ---
+// --- VIEW 4: Approval Detail () Logic ---
 function renderApprovalView(postId) {
   let post = state.posts.find(p => p.id === postId);
   if (!post) {
@@ -1271,7 +1271,7 @@ function saveNewUser() {
   showToast(`Đã thêm thành viên ${name} (${role}) thành công!`, "success");
 }
 
-// --- Delete Modal (FR-06) Logic ---
+// --- Delete Modal () Logic ---
 function openDeleteModal(postId) {
   state.deleteTargetPostId = postId;
   const post = state.posts.find(p => p.id === postId);

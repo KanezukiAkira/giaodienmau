@@ -1,5 +1,5 @@
 /**
- * View: User Management & Permissions (Figma FR-03)
+ * View: User Management & Permissions ()
  */
 import { state, saveState } from '../core/state.js';
 import { escapeHTML } from '../utils/formatters.js';

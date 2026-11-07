@@ -1,5 +1,5 @@
 /**
- * View: Editorial & Create/Edit Post (Figma FR-04 & FR-05)
+ * View: Editorial & Create/Edit Post (& )
  */
 import { state, saveState } from '../core/state.js';
 import { showToast } from '../components/toast.js';

@@ -265,7 +265,7 @@
   color: var(--text-muted);
 }
 
-/* User Dropdown (Figma FR-02 Node 3:43785, width 284px) */
+/* User Dropdown (Node 3:43785, width 284px) */
 .user-dropdown {
   position: absolute;
   top: 52px;

@@ -1,5 +1,5 @@
 /* ==========================================================================
-   VIEW: LOGIN — ĐĂNG NHẬP (Figma FR-01 Node 3:43531)
+   VIEW: LOGIN — ĐĂNG NHẬP (Node 3:43531)
    Exact Figma Canvas Fidelity
    - Left: Brand story (Pink blush background, travertine photo with magnolia flowers)
    - Right: Sign in form ("Chào mừng trở lại!", "Email hoặc tên đăng nhập", etc.)
@@ -184,7 +184,7 @@
   overflow-y: auto;
 }
 
-/* Top bar: FR-01 · ĐĂNG NHẬP | Kết nối an toàn */
+/* Top bar: ĐĂNG NHẬP | Kết nối an toàn */
 .login-form-top {
   width: 100%;
   max-width: 480px;
