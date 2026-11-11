@@ -1,8 +1,10 @@
 /**
  * View: Post Management ()
  */
-import { state } from '../core/state.js';
+import { state, saveState } from '../core/state.js';
 import { escapeHTML } from '../utils/formatters.js';
+import { showToast } from '../components/toast.js';
+import { postsApi } from '../api/postsApi.js';
 
 export function updateMetricsDisplay() {
   const total = state.posts.length;
@@ -101,6 +103,38 @@ export function handlePostTitleClick(postId) {
   }
 }
 
+export async function handleAutoPublishNow(postId) {
+  const post = state.posts.find(p => p.id === postId);
+  if (!post) return;
+
+  const confirmed = window.confirm(`Bạn có chắc muốn hệ thống TỰ ĐỘNG ĐĂNG NGAY 100% bài viết "${post.title}" lên mạng xã hội qua API?`);
+  if (!confirmed) return;
+
+  try {
+    showToast(`Đang tự động xuất bản bài viết ${post.id} qua API...`, "info");
+    const rawId = post.rawId || (post.id && !isNaN(post.id) ? parseInt(post.id, 10) : null);
+    if (!rawId) {
+      showToast("Không tìm thấy mã bài viết trên máy chủ!", "danger");
+      return;
+    }
+
+    const res = await postsApi.autoPublishPost(rawId);
+    post.status = "published";
+    post.statusText = "Đã xuất bản";
+    post.publishedUrl = res.published_url || post.publishedUrl;
+    post.publishedAt = res.published_at || new Date().toISOString();
+
+    saveState();
+    if (window.renderPostsTable) window.renderPostsTable();
+    if (window.renderKanbanBoard) window.renderKanbanBoard();
+    if (window.updateMetricsDisplay) window.updateMetricsDisplay();
+    showToast(`Đã tự động đăng bài viết thành công 100% qua API!`, "success");
+  } catch (err) {
+    console.error("Auto publish error:", err);
+    showToast(`Lỗi tự động đăng bài: ${err.message}`, "danger");
+  }
+}
+
 export function renderPostsRows(posts) {
   const tbody = document.getElementById("postsTableBody");
   const emptyState = document.getElementById("postsEmptyState");
@@ -146,7 +180,10 @@ export function renderPostsRows(posts) {
       <td style="text-align: right;">
         <div class="row-actions">
           ${isPublishable ? `
-            <button class="action-icon-btn" style="color: #2e7d32; border-color: #a5d6a7;" onclick="window.openConfirmPublishModal('${post.id}')" title="Xác nhận đã đăng bài (MOD-06)">
+            <button class="action-icon-btn" style="color: #0d47a1; background: #e3f2fd; border-color: #90caf9;" onclick="window.handleAutoPublishNow('${post.id}')" title="Tự động đăng ngay 100% qua API">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+            </button>
+            <button class="action-icon-btn" style="color: #2e7d32; border-color: #a5d6a7;" onclick="window.openConfirmPublishModal('${post.id}')" title="Xác nhận đã đăng bài thủ công (MOD-06)">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
             </button>
           ` : ''}

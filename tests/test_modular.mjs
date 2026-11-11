@@ -218,7 +218,9 @@ const inlineHandlers = [
   "toggleLockSelectedUser",
   "deleteSelectedUser",
   "initChartTooltips",
-  "filterNotifsByTab"
+  "filterNotifsByTab",
+  "handleAutoPublishNow",
+  "triggerAutoPublishFromModal"
 ];
 
 let missingHandlers = 0;

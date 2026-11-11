@@ -29,5 +29,9 @@ export const postsApi = {
     const formData = new FormData();
     formData.append('file', file);
     return apiClient.post('posts/upload-media', formData);
+  },
+
+  async autoPublishPost(postId) {
+    return apiClient.post(`posts/${postId}/auto-publish`, {});
   }
 };

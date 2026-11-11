@@ -235,6 +235,15 @@ export function closeConfirmPublishModal() {
   state.publishTargetPostId = null;
 }
 
+export async function triggerAutoPublishFromModal() {
+  const postId = state.publishTargetPostId;
+  if (!postId) return;
+  closeConfirmPublishModal();
+  if (window.handleAutoPublishNow) {
+    await window.handleAutoPublishNow(postId);
+  }
+}
+
 export async function submitConfirmPublish() {
   const postId = state.publishTargetPostId;
   const url = document.getElementById("publishUrlInput")?.value.trim();

@@ -26,6 +26,7 @@ import {
   saveNewUser,
   openConfirmPublishModal,
   closeConfirmPublishModal,
+  triggerAutoPublishFromModal,
   submitConfirmPublish,
   openMetricsModal,
   closeMetricsModal,
@@ -56,7 +57,8 @@ import {
   filterPosts,
   resetFilters,
   updateMetricsDisplay,
-  handlePostTitleClick
+  handlePostTitleClick,
+  handleAutoPublishNow
 } from './views/postsView.js';
 
 import {
@@ -156,6 +158,7 @@ Object.assign(window, {
   saveNewUser,
   openConfirmPublishModal,
   closeConfirmPublishModal,
+  triggerAutoPublishFromModal,
   submitConfirmPublish,
   openMetricsModal,
   closeMetricsModal,
@@ -182,6 +185,7 @@ Object.assign(window, {
   resetFilters,
   updateMetricsDisplay,
   handlePostTitleClick,
+  handleAutoPublishNow,
 
   // Editor
   openCreatePost,
