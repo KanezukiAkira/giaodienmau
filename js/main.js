@@ -4,7 +4,7 @@
  */
 
 // Core & State
-import { state, saveState, resetToFigmaDefaultData, exportDataJSON } from './core/state.js';
+import { state, saveState, resetToFigmaDefaultData, exportDataJSON, syncDataFromBackend } from './core/state.js';
 import { switchView } from './core/router.js';
 
 // Components
@@ -108,7 +108,8 @@ import {
   openChangePasswordModal,
   handleAppLoginSubmit,
   toggleAppPasswordVisibility,
-  showHelpModal
+  showHelpModal,
+  updateCurrentUserUI
 } from './utils/events.js';
 
 import { formatDateDisplay, escapeHTML } from './utils/formatters.js';
@@ -118,6 +119,7 @@ Object.assign(window, {
   // State & Data
   state,
   saveState,
+  syncDataFromBackend,
   resetToFigmaDefaultData,
   exportDataJSON,
 
@@ -242,7 +244,12 @@ function initApp() {
   if (!isLoggedIn) {
     switchView("login");
   } else {
+    try {
+      const savedUser = JSON.parse(localStorage.getItem("blossom_current_user"));
+      if (savedUser) updateCurrentUserUI(savedUser);
+    } catch {}
     switchView("dashboard");
+    syncDataFromBackend();
   }
 }
 

@@ -172,16 +172,51 @@
       }
     }
 
-    function handleLoginSubmit(e) {
+    async function handleLoginSubmit(e) {
       e.preventDefault();
       const btn = document.getElementById('btnSubmitLogin');
+      const email = document.getElementById('loginEmail')?.value?.trim();
+      const password = document.getElementById('loginPassword')?.value;
+      const remember = document.getElementById('rememberMe')?.checked ?? true;
+
       btn.disabled = true;
-      btn.innerHTML = '<span>Đang xác thực...</span>';
+      btn.innerHTML = '<span>Đang kết nối máy chủ...</span>';
       
-      setTimeout(() => {
-        sessionStorage.setItem("blossom_logged_in", "true");
+      try {
+        const response = await fetch('http://localhost:8000/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            username_or_email: email,
+            password: password
+          })
+        });
+
+        const data = await response.json();
+        if (!response.ok) {
+          throw new Error(data.detail || 'Đăng nhập không thành công');
+        }
+
+        if (remember) {
+          localStorage.setItem('blossom_access_token', data.access_token);
+        } else {
+          sessionStorage.setItem('blossom_access_token', data.access_token);
+        }
+        localStorage.setItem('blossom_current_user', JSON.stringify(data.user));
+        sessionStorage.setItem('blossom_logged_in', 'true');
         window.location.href = 'index.html';
-      }, 500);
+      } catch (err) {
+        console.warn('Backend login warning:', err);
+        if (err.message && (err.message.includes('Failed to fetch') || err.message.includes('NetworkError'))) {
+          // Fallback offline mock nếu backend server chưa bật
+          sessionStorage.setItem('blossom_logged_in', 'true');
+          window.location.href = 'index.html';
+        } else {
+          alert(err.message || 'Sai tên đăng nhập hoặc mật khẩu!');
+          btn.disabled = false;
+          btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg><span>Đăng nhập</span>';
+        }
+      }
     }
   </script>
 </body>

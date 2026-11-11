@@ -1,8 +1,8 @@
 {
-  "name": "blossom-beauty-store",
-  "version": "1.0.0",
+  "name": "blossom-beauty-store-frontend",
+  "version": "1.1.0",
   "type": "module",
-  "description": "Blossom Beauty Store - Editorial & Content Management System UI",
+  "description": "Blossom Beauty Store - Multi-Channel Communication Management System UI (RikkeiLab 2 - Nhom 7)",
   "main": "js/main.js",
   "scripts": {
     "start": "npx live-server --port=5500 --open=index.html",
@@ -12,10 +12,13 @@
   },
   "keywords": [
     "blossom",
-    "figma-to-code",
+    "rikkeilab",
+    "cms",
+    "multi-channel",
     "vanilla-js",
-    "es-modules"
+    "es-modules",
+    "fastapi-ready"
   ],
-  "author": "",
+  "author": "Nhom 7 - RikkeiLab 2",
   "license": "ISC"
 }
