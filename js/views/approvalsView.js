@@ -103,6 +103,12 @@ export function renderApprovalView(postId) {
 }
 
 export async function approveCurrentPost() {
+  const currentUser = JSON.parse(localStorage.getItem("blossom_current_user") || "{}");
+  if (currentUser.role_code === "STAFF" || currentUser.role_id === 2) {
+    showToast("Tài khoản Biên tập viên chỉ có quyền xem. Chỉ Marketing Manager mới có quyền phê duyệt bài viết!", "warning");
+    return;
+  }
+
   const post = state.posts.find(p => p.id === state.activeApprovalPostId) || state.posts.find(p => p.status === "pending") || state.posts[0];
   if (!post) {
     showToast("Không có bài viết nào để phê duyệt", "warning");

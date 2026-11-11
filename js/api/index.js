@@ -11,3 +11,4 @@ export { schedulesApi } from './schedulesApi.js';
 export { trackingApi } from './trackingApi.js';
 export { analyticsApi } from './analyticsApi.js';
 export { notificationsApi } from './notificationsApi.js';
+export { socialApi } from './socialApi.js';

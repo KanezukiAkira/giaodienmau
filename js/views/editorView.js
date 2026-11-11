@@ -53,6 +53,9 @@ export function openCreatePost() {
     elBadge.className = "badge badge-draft";
   }
 
+  const alertEl = document.getElementById("editorRevisionAlert");
+  if (alertEl) alertEl.style.display = "none";
+
   updateWordCount();
   updateChecklist();
   window.switchView("editor");
@@ -102,6 +105,27 @@ export function openEditPost(postId) {
   if (badge) {
     badge.textContent = post.statusText;
     badge.className = `badge badge-${post.status}`;
+  }
+
+  const alertEl = document.getElementById("editorRevisionAlert");
+  const commentEl = document.getElementById("editorRevisionCommentText");
+  if (alertEl) {
+    if (post.status === "revising" || post.status === "rejected") {
+      alertEl.style.display = "block";
+      if (commentEl) commentEl.textContent = post.revisionFeedback || "Quản trị viên đã yêu cầu chỉnh sửa bài viết. Vui lòng hoàn thiện nội dung và gửi duyệt lại.";
+      if (post.rawId) {
+        approvalsApi.getApprovalHistory(post.rawId).then(history => {
+          if (Array.isArray(history) && history.length > 0) {
+            const lastAction = history[history.length - 1];
+            if (lastAction && lastAction.comment && commentEl) {
+              commentEl.textContent = lastAction.comment;
+            }
+          }
+        }).catch(() => {});
+      }
+    } else {
+      alertEl.style.display = "none";
+    }
   }
 
   updateWordCount();

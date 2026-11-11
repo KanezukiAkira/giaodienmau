@@ -4,6 +4,7 @@
 import { state, saveState } from '../core/state.js';
 import { escapeHTML } from '../utils/formatters.js';
 import { showToast } from '../components/toast.js';
+import { notificationsApi } from '../api/notificationsApi.js';
 
 let currentNotifTab = "all";
 
@@ -78,8 +79,15 @@ export function renderNotificationsList() {
   updateNotifCounters();
 }
 
-export function handleNotifClick(notif) {
+export async function handleNotifClick(notif) {
   notif.unread = false;
+  if (notif.rawId) {
+    try {
+      await notificationsApi.markAsRead(notif.rawId);
+    } catch (e) {
+      console.warn("Backend markAsRead warning:", e.message);
+    }
+  }
   saveState();
   renderNotificationsList();
   if (notif.targetPostId) {
@@ -93,7 +101,12 @@ export function handleNotifClick(notif) {
 }
 
 export function markAllNotifsRead() {
-  state.notifications.forEach(n => n.unread = false);
+  state.notifications.forEach(n => {
+    n.unread = false;
+    if (n.rawId) {
+      notificationsApi.markAsRead(n.rawId).catch(() => {});
+    }
+  });
   saveState();
   renderNotificationsList();
   showToast("Đã đánh dấu đã đọc tất cả thông báo!", "info");

@@ -23,8 +23,19 @@ import {
   confirmSubmitPostForApproval,
   openAddUserModal,
   closeAddUserModal,
-  saveNewUser
+  saveNewUser,
+  openConfirmPublishModal,
+  closeConfirmPublishModal,
+  submitConfirmPublish,
+  openMetricsModal,
+  closeMetricsModal,
+  submitManualMetrics,
+  syncSocialMetrics,
+  openChangePasswordModal,
+  closeChangePasswordModal,
+  submitChangePassword
 } from './components/modal.js';
+import { notificationsApi } from './api/notificationsApi.js';
 
 // Views
 import {
@@ -105,7 +116,6 @@ import {
   setupKeyboardShortcuts,
   handleGlobalSearch,
   handleLogout,
-  openChangePasswordModal,
   handleAppLoginSubmit,
   toggleAppPasswordVisibility,
   showHelpModal,
@@ -144,6 +154,16 @@ Object.assign(window, {
   openAddUserModal,
   closeAddUserModal,
   saveNewUser,
+  openConfirmPublishModal,
+  closeConfirmPublishModal,
+  submitConfirmPublish,
+  openMetricsModal,
+  closeMetricsModal,
+  submitManualMetrics,
+  syncSocialMetrics,
+  openChangePasswordModal,
+  closeChangePasswordModal,
+  submitChangePassword,
 
   // Dashboard / Kanban
   renderKanbanBoard,
@@ -250,6 +270,27 @@ function initApp() {
     } catch {}
     switchView("dashboard");
     syncDataFromBackend();
+
+    // Connect WebSocket for real-time live notifications (Backend FR-12)
+    try {
+      const token = (typeof localStorage !== "undefined" && localStorage.getItem("blossom_access_token")) ||
+                    (typeof sessionStorage !== "undefined" && sessionStorage.getItem("blossom_access_token"));
+      if (token) {
+        notificationsApi.connectWebSocket(
+          token,
+          (msg) => {
+            const title = (msg && typeof msg === "object") ? msg.title : "Thông báo mới";
+            const body = (msg && typeof msg === "object") ? msg.message : String(msg);
+            showToast(`🔔 ${title}: ${body}`, "info");
+            syncDataFromBackend();
+          },
+          (err) => console.log("WS info:", err),
+          () => console.log("WS closed")
+        );
+      }
+    } catch (e) {
+      console.warn("WebSocket init warning:", e);
+    }
   }
 }
 

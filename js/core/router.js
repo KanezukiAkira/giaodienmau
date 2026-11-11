@@ -2,6 +2,7 @@
  * View Router: SPA Screen Switching
  */
 import { state } from './state.js';
+import { showToast } from '../components/toast.js';
 import { closeAllDropdowns } from '../components/dropdown.js';
 import { renderKanbanBoard } from '../views/dashboardView.js';
 import { renderPostsTable } from '../views/postsView.js';
@@ -56,6 +57,13 @@ export function switchView(viewName) {
   } else if (viewName === "notifications") {
     renderNotificationsList();
   } else if (viewName === "users") {
+    const user = JSON.parse(localStorage.getItem("blossom_current_user") || "{}");
+    if (user.role_code === "STAFF" || user.role_id === 2) {
+      showToast("Chức năng Quản lý Người dùng & Phân quyền chỉ dành riêng cho Marketing Manager!", "warning");
+      // Fallback back to dashboard
+      switchView("dashboard");
+      return;
+    }
     renderUsersTable();
   }
 

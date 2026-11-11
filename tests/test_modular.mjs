@@ -281,6 +281,14 @@ try {
   window.exportReportData();
   console.log("✓ Statistics period update and report export passed");
 
+  window.openConfirmPublishModal("BL-0001");
+  window.closeConfirmPublishModal();
+  window.openMetricsModal("BL-0001");
+  window.closeMetricsModal();
+  window.openChangePasswordModal();
+  window.closeChangePasswordModal();
+  console.log("✓ Confirm Publish, Metrics and Change Password modals passed");
+
   window.showToast("Kiểm thử tự động thành công!", "success");
   console.log("✓ Toast notification passed");
 

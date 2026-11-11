@@ -135,17 +135,6 @@ export function toggleAppPasswordVisibility() {
   }
 }
 
-export function openChangePasswordModal() {
-  const newPass = prompt("Nhập mật khẩu mới cho tài khoản Nguyễn Minh Anh (tối thiểu 8 ký tự):");
-  if (newPass) {
-    if (newPass.length < 8) {
-      showToast("Mật khẩu phải có tối thiểu 8 ký tự!", "danger");
-    } else {
-      showToast("Đã cập nhật mật khẩu mới thành công!", "success");
-    }
-  }
-}
-
 export async function handleLogout() {
   if (confirm("Bạn có muốn đăng xuất khỏi Blossom Beauty Store?")) {
     try {

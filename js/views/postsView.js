@@ -123,6 +123,9 @@ export function renderPostsRows(posts) {
     else if (post.status === "pending") statusBadgeClass = "badge-pending";
     else if (post.status === "revising") statusBadgeClass = "badge-revising";
 
+    const isPublishable = post.status === "approved" || post.status === "scheduled";
+    const isPublished = post.status === "published";
+
     tr.innerHTML = `
       <td>
         <div class="table-post-identity">
@@ -142,6 +145,21 @@ export function renderPostsRows(posts) {
       <td>${post.displayDate}</td>
       <td style="text-align: right;">
         <div class="row-actions">
+          ${isPublishable ? `
+            <button class="action-icon-btn" style="color: #2e7d32; border-color: #a5d6a7;" onclick="window.openConfirmPublishModal('${post.id}')" title="Xác nhận đã đăng bài (MOD-06)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            </button>
+          ` : ''}
+          ${isPublished ? `
+            ${post.publishedUrl ? `
+              <a href="${escapeHTML(post.publishedUrl)}" target="_blank" rel="noopener noreferrer" class="action-icon-btn" style="color: #1976d2;" title="Mở liên kết bài đăng thực tế">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              </a>
+            ` : ''}
+            <button class="action-icon-btn" style="color: #7b1fa2;" onclick="window.openMetricsModal('${post.id}')" title="Cập nhật hoặc đồng bộ chỉ số (MOD-07)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+            </button>
+          ` : ''}
           <button class="action-icon-btn" onclick="window.openEditPost('${post.id}')" title="Chỉnh sửa">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
           </button>
