@@ -1,21 +1,21 @@
 /**
- * Central State Management & LocalStorage Persistence
- * Supports Dual-Mode: Live Backend API Synchronization & Mock LocalStorage Fallback
+ * Central State Management & Live Backend Data Store
+ * System runs on real data from Backend FastAPI
  */
-import { DEFAULT_POSTS, DEFAULT_USERS, DEFAULT_NOTIFICATIONS } from '../data/mockData.js';
 import { showToast } from '../components/toast.js';
 import { postsApi } from '../api/postsApi.js';
 import { usersApi } from '../api/usersApi.js';
+import { notificationsApi } from '../api/notificationsApi.js';
 
 export const state = {
-  posts: JSON.parse(localStorage.getItem("blossom_posts")) || DEFAULT_POSTS,
-  users: JSON.parse(localStorage.getItem("blossom_users")) || DEFAULT_USERS,
-  notifications: JSON.parse(localStorage.getItem("blossom_notifs")) || DEFAULT_NOTIFICATIONS,
+  posts: JSON.parse(localStorage.getItem("blossom_posts") || "[]"),
+  users: JSON.parse(localStorage.getItem("blossom_users") || "[]"),
+  notifications: JSON.parse(localStorage.getItem("blossom_notifs") || "[]"),
   currentView: "dashboard",
   currentTab: "all",
-  activeApprovalPostId: "BL-0127",
+  activeApprovalPostId: null,
   deleteTargetPostId: null,
-  calendarCurrentDate: new Date(2026, 10, 1) // November 2026
+  calendarCurrentDate: new Date()
 };
 
 // Handlers that subscribe to state updates
@@ -30,9 +30,13 @@ export function notifyStateChanged() {
 }
 
 export function saveState() {
-  localStorage.setItem("blossom_posts", JSON.stringify(state.posts));
-  localStorage.setItem("blossom_users", JSON.stringify(state.users));
-  localStorage.setItem("blossom_notifs", JSON.stringify(state.notifications));
+  try {
+    localStorage.setItem("blossom_posts", JSON.stringify(state.posts));
+    localStorage.setItem("blossom_users", JSON.stringify(state.users));
+    localStorage.setItem("blossom_notifs", JSON.stringify(state.notifications));
+  } catch (e) {
+    console.warn("Storage warning:", e);
+  }
   notifyStateChanged();
   if (window.updateMetricsDisplay) window.updateMetricsDisplay();
   if (window.updateNotifCounters) window.updateNotifCounters();
@@ -40,7 +44,7 @@ export function saveState() {
 }
 
 /**
- * Mapping Backend Post response to Frontend UI format
+ * Mapping Backend Post entity to UI representation
  */
 export function mapBackendPostToUI(p) {
   const statusMap = {
@@ -59,8 +63,8 @@ export function mapBackendPostToUI(p) {
   return {
     id: `BL-${String(p.post_id).padStart(4, '0')}`,
     rawId: p.post_id,
-    title: p.title,
-    author: p.author_name || "Trần Thu Hà",
+    title: p.title || "Bài viết không tên",
+    author: p.author_name || `Staff #${p.author_id}`,
     category: "Chăm sóc da",
     campaign: "Chiến dịch truyền thông",
     status: mapped.status,
@@ -68,83 +72,97 @@ export function mapBackendPostToUI(p) {
     scheduleDate: d.toISOString().split('T')[0],
     scheduleTime: d.toTimeString().slice(0, 5),
     displayDate: `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}/${d.getFullYear()}`,
-    channels: platformNames[p.platform_id] || "Facebook & Instagram",
-    heroImage: (Array.isArray(p.media_files) && p.media_files[0]) || "assets/images/login-skincare-figma.jpg",
+    channels: platformNames[p.platform_id] || "Đa kênh",
+    heroImage: (Array.isArray(p.media_files) && p.media_files[0]) || "",
     content: (p.caption || "") + (p.hashtags ? "<br><br>" + p.hashtags : ""),
-    reach: "15.420",
-    engagement: "1.584",
-    engagementRate: "10,2%",
-    isArchived: false,
+    reach: "0",
+    engagement: "0",
+    engagementRate: "0%",
+    isArchived: p.status === "REJECTED",
     isMine: true
   };
 }
 
 /**
- * Mapping Backend User response to Frontend UI format
+ * Mapping Backend User entity to UI representation
  */
 export function mapBackendUserToUI(u) {
   const roleName = u.role_id === 1 ? "Quản lý" : "Biên tập viên";
+  const name = u.full_name || u.username;
+  const initials = name.trim().split(/\s+/).map(w => w[0]).join('').slice(0, 2).toUpperCase() || "US";
   return {
-    id: `NV-${String(u.user_id).padStart(4, '0')}`,
+    id: u.user_id,
     rawId: u.user_id,
-    name: u.full_name || u.username,
+    name: name,
     email: u.email,
     role: roleName,
-    status: u.status === "ACTIVE" ? "Đang hoạt động" : "Bị khóa",
+    status: u.status === "ACTIVE" ? "Hoạt động" : "Đã khóa",
     canLogin: u.status === "ACTIVE",
     isLocked: u.status !== "ACTIVE",
-    avatar: (u.full_name || u.username).split(" ").map(w => w[0]).join("").slice(0, 2).toUpperCase()
+    avatar: initials,
+    lastLogin: u.last_login_at ? new Date(u.last_login_at).toLocaleString("vi-VN") : "Chưa đăng nhập"
   };
 }
 
 /**
- * Fetch and synchronize data from live Backend FastAPI
+ * Live Data Sync from Backend FastAPI & MySQL
  */
 export async function syncDataFromBackend() {
   try {
-    const [posts, users] = await Promise.all([
-      postsApi.getPosts({ page: 1, page_size: 50 }).catch(() => null),
-      usersApi.getUsers().catch(() => null)
+    const [postsData, usersData, notifsData] = await Promise.all([
+      postsApi.getPosts({ page: 1, page_size: 100 }).catch(() => null),
+      usersApi.getUsers({ skip: 0, limit: 100 }).catch(() => null),
+      notificationsApi.getNotifications().catch(() => null)
     ]);
 
-    let updated = false;
-    if (Array.isArray(posts) && posts.length > 0) {
-      state.posts = posts.map(mapBackendPostToUI);
-      updated = true;
+    if (Array.isArray(postsData)) {
+      state.posts = postsData.map(mapBackendPostToUI);
     }
-    if (Array.isArray(users) && users.length > 0) {
-      state.users = users.map(mapBackendUserToUI);
-      updated = true;
+    if (Array.isArray(usersData)) {
+      state.users = usersData.map(mapBackendUserToUI);
+    }
+    if (Array.isArray(notifsData)) {
+      state.notifications = notifsData.map(n => ({
+        id: n.notification_id,
+        title: n.title,
+        desc: n.message,
+        time: new Date(n.created_at).toLocaleTimeString("vi-VN", { hour: '2-digit', minute: '2-digit' }),
+        unread: !n.is_read,
+        targetView: n.post_id ? "approvals" : "notifications",
+        targetPostId: n.post_id ? `BL-${String(n.post_id).padStart(4, '0')}` : null
+      }));
     }
 
-    if (updated) {
-      saveState();
-      if (window.renderPostsTable) window.renderPostsTable();
-      if (window.renderKanbanBoard) window.renderKanbanBoard();
-      if (window.renderUsersTable) window.renderUsersTable();
-      if (window.renderCalendar) window.renderCalendar();
-      if (window.updateMetricsDisplay) window.updateMetricsDisplay();
-      console.log("✓ Đồng bộ dữ liệu thành công từ Backend FastAPI!");
-    }
-  } catch (e) {
-    console.warn("Backend sync notice:", e.message);
+    saveState();
+
+    if (window.renderPostsTable) window.renderPostsTable();
+    if (window.renderKanbanBoard) window.renderKanbanBoard();
+    if (window.renderUsersTable) window.renderUsersTable();
+    if (window.renderCalendar) window.renderCalendar();
+    if (window.renderNotificationsList) window.renderNotificationsList();
+    if (window.updateMetricsDisplay) window.updateMetricsDisplay();
+    if (window.updateNotifCounters) window.updateNotifCounters();
+    if (window.updateStatsPeriod) window.updateStatsPeriod();
+
+    console.log("✓ Live data synchronized from Backend FastAPI & MySQL!");
+  } catch (err) {
+    console.warn("Sync warning:", err);
   }
 }
 
-export function resetToFigmaDefaultData() {
-  if (confirm("Khôi phục toàn bộ bài viết và dữ liệu mẫu về thiết kế gốc trên Figma?")) {
+/**
+ * Clear cached state and refresh live data
+ */
+export async function resetToFigmaDefaultData() {
+  if (confirm("Làm mới toàn bộ dữ liệu từ máy chủ Backend MySQL?")) {
     localStorage.removeItem("blossom_posts");
     localStorage.removeItem("blossom_users");
     localStorage.removeItem("blossom_notifs");
-    state.posts = JSON.parse(JSON.stringify(DEFAULT_POSTS));
-    state.users = JSON.parse(JSON.stringify(DEFAULT_USERS));
-    state.notifications = JSON.parse(JSON.stringify(DEFAULT_NOTIFICATIONS));
-    saveState();
-    if (window.renderPostsTable) window.renderPostsTable();
-    if (window.renderCalendar) window.renderCalendar();
-    if (window.renderNotificationsList) window.renderNotificationsList();
-    if (window.renderUsersTable) window.renderUsersTable();
-    showToast("Đã khôi phục dữ liệu mẫu gốc từ Figma thành công!", "success");
+    state.posts = [];
+    state.users = [];
+    state.notifications = [];
+    await syncDataFromBackend();
+    showToast("Đã đồng bộ lại dữ liệu mới nhất từ máy chủ!", "success");
   }
 }
 
@@ -152,7 +170,7 @@ export function exportDataJSON() {
   const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state, null, 2));
   const dlAnchor = document.createElement("a");
   dlAnchor.setAttribute("href", dataStr);
-  dlAnchor.setAttribute("download", "blossom_mock_data.json");
+  dlAnchor.setAttribute("download", `blossom_live_data_${new Date().toISOString().slice(0, 10)}.json`);
   dlAnchor.click();
-  showToast("Đã xuất file blossom_mock_data.json!", "success");
+  showToast("Đã xuất file dữ liệu thực tế thành công!", "success");
 }

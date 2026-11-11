@@ -9,7 +9,7 @@ import { renderPostsTable, handlePostTitleClick } from './postsView.js';
 let draggedPostId = null;
 
 function formatShortDate(dateStr) {
-  if (!dateStr) return "07/11";
+  if (!dateStr) return "--/--";
   if (dateStr.includes("-")) {
     const parts = dateStr.split("-");
     if (parts.length === 3) return `${parts[2]}/${parts[1]}`;
@@ -77,13 +77,13 @@ export function renderKanbanBoard() {
     let isDone = false;
 
     if (post.status === "draft") {
-      progressPct = post.id === "BL-0125" ? 35 : (post.id === "BL-0122" ? 20 : 25);
+      progressPct = 25;
       progressClass = "fill-purple";
     } else if (post.status === "revising") {
-      progressPct = post.id === "BL-0126" ? 50 : (post.id === "BL-0120" ? 55 : 45);
+      progressPct = 50;
       progressClass = "";
     } else if (post.status === "pending") {
-      progressPct = 70;
+      progressPct = 75;
       progressClass = "fill-orange";
     } else if (post.status === "scheduled" || post.status === "published") {
       progressPct = 100;
@@ -153,6 +153,22 @@ export function renderKanbanBoard() {
     }
   });
 
+  const emptyPlaceholder = (text) => `
+    <div style="padding: 24px 12px; text-align: center; color: #a0989b; font-size: 13px; border: 1px dashed #e8dfe3; border-radius: 8px; margin: 4px 0;">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" style="margin-bottom: 6px; opacity: 0.5;">
+        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+        <line x1="9" y1="9" x2="15" y2="9"/>
+        <line x1="9" y1="13" x2="15" y2="13"/>
+      </svg>
+      <div>${text}</div>
+    </div>
+  `;
+
+  if (countDraft === 0) cardsDraft.innerHTML = emptyPlaceholder("Không có bản nháp");
+  if (countPending === 0) cardsPending.innerHTML = emptyPlaceholder("Không có bài chờ duyệt");
+  if (countRevising === 0) cardsRevising.innerHTML = emptyPlaceholder("Không có bài cần sửa");
+  if (countScheduled === 0) cardsScheduled.innerHTML = emptyPlaceholder("Không có bài đã lên lịch");
+
   const elDraft = document.getElementById("kbCountDraft");
   const elPending = document.getElementById("kbCountPending");
   const elRevising = document.getElementById("kbCountRevising");
@@ -221,6 +237,16 @@ export function renderMemberProgressView() {
   if (!tbody) return;
 
   tbody.innerHTML = "";
+  if (state.users.length === 0) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="6" style="text-align: center; padding: 32px; color: #a0989b;">
+          Chưa có dữ liệu thành viên trên hệ thống
+        </td>
+      </tr>
+    `;
+    return;
+  }
   state.users.forEach(user => {
     const userPosts = state.posts.filter(p => p.author === user.name);
     const draftCount = userPosts.filter(p => p.status === "draft").length;

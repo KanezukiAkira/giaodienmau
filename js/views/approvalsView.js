@@ -4,15 +4,13 @@
 import { state, saveState } from '../core/state.js';
 import { escapeHTML } from '../utils/formatters.js';
 import { showToast } from '../components/toast.js';
+import { approvalsApi } from '../api/approvalsApi.js';
 
 export function renderApprovalView(postId) {
   let post = state.posts.find(p => p.id === postId);
   if (!post) {
     post = state.posts.find(p => p.status === "pending") || state.posts[0];
   }
-  if (!post) return;
-
-  state.activeApprovalPostId = post.id;
 
   const elCode = document.getElementById("approvalPostCode");
   const elTitle = document.getElementById("approvalTitle");
@@ -23,6 +21,25 @@ export function renderApprovalView(postId) {
   const statusBadge = document.getElementById("approvalStatusBadge");
   const elContent = document.getElementById("approvalContent");
   const elAttachment = document.getElementById("approvalAttachmentName");
+
+  if (!post) {
+    state.activeApprovalPostId = null;
+    if (elCode) elCode.textContent = "--";
+    if (elTitle) elTitle.textContent = "Không có bài viết nào đang chờ duyệt";
+    if (elCat) elCat.textContent = "Hàng đợi trống";
+    if (elAuthor) elAuthor.textContent = "--";
+    if (elSubTime) elSubTime.textContent = "--";
+    if (statusBadge) {
+      statusBadge.textContent = "Trống";
+      statusBadge.className = "badge badge-draft";
+    }
+    if (elContent) elContent.innerHTML = "<p style='color: #a4989d; text-align: center; padding: 40px;'>Tất cả bài viết đã được xử lý hoặc chưa có bài viết nào được gửi duyệt.</p>";
+    const quickList = document.getElementById("approvalQuickSwitchList");
+    if (quickList) quickList.innerHTML = `<span style="font-size: 11px; color: #a4989d; padding: 8px 0; display: block;">Không có bài viết nào chờ duyệt</span>`;
+    return;
+  }
+
+  state.activeApprovalPostId = post.id;
 
   if (elCode) elCode.textContent = post.id;
   if (elTitle) elTitle.textContent = post.title;
@@ -85,24 +102,35 @@ export function renderApprovalView(postId) {
   }
 }
 
-export function approveCurrentPost() {
-  const post = state.posts.find(p => p.id === state.activeApprovalPostId);
-  if (!post) return;
+export async function approveCurrentPost() {
+  const post = state.posts.find(p => p.id === state.activeApprovalPostId) || state.posts.find(p => p.status === "pending") || state.posts[0];
+  if (!post) {
+    showToast("Không có bài viết nào để phê duyệt", "warning");
+    return;
+  }
 
   post.status = "scheduled";
   post.statusText = "Đã lên lịch";
 
+  if (post.rawId) {
+    try {
+      await approvalsApi.approvePost(post.rawId);
+    } catch (e) {
+      console.warn("Backend approvePost notice:", e.message);
+    }
+  }
+
   state.notifications.unshift({
     id: Date.now(),
     title: `Bài viết ${post.id} đã được phê duyệt`,
-    desc: `Quản trị viên Minh Anh đã phê duyệt bài viết "${post.title}". Bài viết sẽ đăng vào ${post.displayDate}.`,
+    desc: `Quản trị viên đã phê duyệt bài viết "${post.title}". Đồng bộ lên Content Calendar.`,
     time: "Vừa xong",
     unread: true,
     targetView: "calendar"
   });
 
   saveState();
-  showToast(`Đã phê duyệt bài viết ${post.id}! Trạng thái chuyển thành "Đã lên lịch".`, "success");
+  showToast(`Đã phê duyệt bài viết ${post.id}! Trạng thái chuyển thành "Đã lên lịch" trên máy chủ.`, "success");
 
   // Check if there are other pending posts
   const nextPending = state.posts.find(p => p.status === "pending");

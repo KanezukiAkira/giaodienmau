@@ -13,7 +13,9 @@ class ApiClient {
 
   getAuthToken() {
     try {
-      return localStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN) || sessionStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN) || null;
+      const fromLocal = typeof localStorage !== "undefined" ? localStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN) : null;
+      const fromSession = typeof sessionStorage !== "undefined" ? sessionStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN) : null;
+      return fromLocal || fromSession || null;
     } catch {
       return null;
     }
@@ -22,14 +24,14 @@ class ApiClient {
   setAuthToken(token, persistent = true) {
     try {
       if (token) {
-        if (persistent) {
+        if (persistent && typeof localStorage !== "undefined") {
           localStorage.setItem(STORAGE_KEYS.ACCESS_TOKEN, token);
-        } else {
+        } else if (typeof sessionStorage !== "undefined") {
           sessionStorage.setItem(STORAGE_KEYS.ACCESS_TOKEN, token);
         }
       } else {
-        localStorage.removeItem(STORAGE_KEYS.ACCESS_TOKEN);
-        sessionStorage.removeItem(STORAGE_KEYS.ACCESS_TOKEN);
+        if (typeof localStorage !== "undefined") localStorage.removeItem(STORAGE_KEYS.ACCESS_TOKEN);
+        if (typeof sessionStorage !== "undefined") sessionStorage.removeItem(STORAGE_KEYS.ACCESS_TOKEN);
       }
     } catch (e) {
       console.warn("Storage warning:", e);

@@ -13,8 +13,8 @@ export const APP_CONFIG = {
   // Timeout mặc định cho HTTP Request (ms)
   REQUEST_TIMEOUT: 15000,
   
-  // Cờ kích hoạt Mock Fallback (nếu Backend chưa online thì fallback sang LocalStorage / mockData)
-  ENABLE_MOCK_FALLBACK: true,
+  // Cờ kích hoạt Mock Fallback (Đã tắt hoàn toàn để chạy 100% dữ liệu thực từ Backend & MySQL)
+  ENABLE_MOCK_FALLBACK: false,
   
   // Phiên bản Frontend
   VERSION: "1.1.0"

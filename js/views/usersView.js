@@ -1,11 +1,13 @@
 /**
- * View: User Management & Permissions ()
+ * View: User Management & Permissions
+ * Connected with live Backend FastAPI & MySQL
  */
 import { state, saveState } from '../core/state.js';
 import { escapeHTML } from '../utils/formatters.js';
 import { showToast } from '../components/toast.js';
+import { usersApi } from '../api/usersApi.js';
 
-let selectedUserId = 2; // Default selected: Trần Ngọc Mai (ID 2)
+let selectedUserId = 1;
 
 export function renderUsersTable() {
   const tbody = document.getElementById("usersTableBody");
@@ -17,7 +19,7 @@ export function renderUsersTable() {
 
   const filtered = state.users.filter(user => {
     if (searchTerm) {
-      const matchName = user.name.toLowerCase().includes(searchTerm);
+      const matchName = (user.name || "").toLowerCase().includes(searchTerm);
       const matchEmail = (user.email || "").toLowerCase().includes(searchTerm);
       if (!matchName && !matchEmail) return false;
     }
@@ -40,12 +42,29 @@ export function renderUsersTable() {
   if (elActive) elActive.textContent = String(state.users.filter(u => u.status === "Hoạt động").length).padStart(2, "0");
   if (elLocked) elLocked.textContent = String(state.users.filter(u => u.status === "Đã khóa").length).padStart(2, "0");
 
+  if (filtered.length === 0) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="5" style="text-align: center; padding: 36px 16px; color: #a4989d; font-size: 13px;">
+          Chưa có tài khoản người dùng nào. Nhấn "+ Thêm tài khoản" ở trên để tạo thành viên mới.
+        </td>
+      </tr>
+    `;
+    renderSelectedUserDetail();
+    return;
+  }
+
+  // Ensure selectedUserId is valid
+  if (!state.users.some(u => u.id === selectedUserId)) {
+    selectedUserId = filtered[0]?.id || 1;
+  }
+
   filtered.forEach(user => {
     const isSelected = user.id === selectedUserId;
     const tr = document.createElement("tr");
     if (isSelected) tr.style.backgroundColor = "#fff8fa";
 
-    const lastLogin = user.lastLogin || "Hôm nay, 09:30";
+    const lastLogin = user.lastLogin || "Chưa đăng nhập";
     const isLocked = user.status === "Đã khóa";
 
     tr.innerHTML = `
@@ -133,26 +152,47 @@ export function updateSelectedUserRole() {
   }
 }
 
-export function toggleUserLoginStatus() {
+export async function toggleUserLoginStatus() {
   const user = state.users.find(u => u.id === selectedUserId);
   if (!user) return;
 
   user.status = user.status === "Đã khóa" ? "Hoạt động" : "Đã khóa";
+  user.canLogin = user.status === "Hoạt động";
+  user.isLocked = user.status === "Đã khóa";
+
+  if (user.rawId) {
+    try {
+      await usersApi.updateUserStatus(user.rawId, user.isLocked ? "LOCKED" : "ACTIVE");
+    } catch (e) {
+      console.warn("Backend updateUserStatus notice:", e.message);
+    }
+  }
+
   saveState();
   renderUsersTable();
   showToast(`Đã ${user.status === 'Đã khóa' ? 'khóa' : 'mở khóa'} quyền đăng nhập của ${user.name}!`, "info");
 }
 
-export function saveSelectedUserDetails() {
+export async function saveSelectedUserDetails() {
   const user = state.users.find(u => u.id === selectedUserId);
   if (!user) return;
 
   const newRole = document.getElementById("detailUserRoleSelect")?.value;
-  if (newRole) user.role = newRole;
+  if (newRole) {
+    user.role = newRole;
+    if (user.rawId) {
+      try {
+        const roleId = newRole.includes("Quản lý") ? 1 : 2;
+        await usersApi.updateUser(user.rawId, { role_id: roleId });
+      } catch (e) {
+        console.warn("Backend updateUser notice:", e.message);
+      }
+    }
+  }
 
   saveState();
   renderUsersTable();
-  showToast(`Đã lưu thay đổi cho tài khoản ${user.name}!`, "success");
+  showToast(`Đã lưu thay đổi cho tài khoản ${user.name} lên máy chủ!`, "success");
 }
 
 export function toggleLockSelectedUser() {

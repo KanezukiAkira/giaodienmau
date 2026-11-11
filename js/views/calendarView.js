@@ -26,9 +26,10 @@ export function changeMonth(delta) {
 }
 
 export function goToToday() {
-  state.calendarCurrentDate = new Date(2026, 10, 4); // November 4, 2026 current mock time
+  state.calendarCurrentDate = new Date();
   renderCalendar();
-  showToast("Đã chuyển về ngày hôm nay (04/11/2026)", "info");
+  const todayFormatted = `${String(state.calendarCurrentDate.getDate()).padStart(2, "0")}/${String(state.calendarCurrentDate.getMonth() + 1).padStart(2, "0")}/${state.calendarCurrentDate.getFullYear()}`;
+  showToast(`Đã chuyển về ngày hôm nay (${todayFormatted})`, "info");
 }
 
 export function renderCalendar() {
@@ -66,7 +67,8 @@ export function renderCalendar() {
       const dDate = d.getDate();
 
       const dateStr = `${dYear}-${String(dMonth + 1).padStart(2, "0")}-${String(dDate).padStart(2, "0")}`;
-      const isToday = (dYear === 2026 && dMonth === 10 && dDate === 4);
+      const now = new Date();
+      const isToday = (dYear === now.getFullYear() && dMonth === now.getMonth() && dDate === now.getDate());
 
       const dayPosts = state.posts.filter(p => {
         if (p.scheduleDate !== dateStr) return false;
@@ -104,7 +106,8 @@ export function renderCalendar() {
     // Render current month days
     for (let d = 1; d <= lastDay.getDate(); d++) {
       const dateStr = `${year}-${String(month + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
-      const isToday = (year === 2026 && month === 10 && d === 4);
+      const now = new Date();
+      const isToday = (year === now.getFullYear() && month === now.getMonth() && d === now.getDate());
 
       // Find posts scheduled for this day
       const dayPosts = state.posts.filter(p => {

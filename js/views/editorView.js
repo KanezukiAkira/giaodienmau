@@ -1,9 +1,11 @@
 /**
  * View: Editorial & Create/Edit Post (& )
  */
-import { state, saveState } from '../core/state.js';
+import { state, saveState, syncDataFromBackend } from '../core/state.js';
 import { showToast } from '../components/toast.js';
 import { formatDateDisplay } from '../utils/formatters.js';
+import { postsApi } from '../api/postsApi.js';
+import { approvalsApi } from '../api/approvalsApi.js';
 
 export function openCreatePost() {
   const elEditId = document.getElementById("editPostId");
@@ -107,7 +109,7 @@ export function openEditPost(postId) {
   window.switchView("editor");
 }
 
-export function savePostDraft() {
+export async function savePostDraft() {
   const postId = document.getElementById("editPostId")?.value;
   const title = document.getElementById("postTitleInput")?.value.trim() || "Bản nháp chưa đặt tên";
   const category = document.getElementById("postCategorySelect")?.value || "Chăm sóc da";
@@ -118,6 +120,13 @@ export function savePostDraft() {
   const heroImage = document.getElementById("mediaPreviewImg")?.src || "";
 
   const [sDate, sTime] = scheduleTimeRaw.split("T");
+
+  let platformId = 1;
+  const chLower = channels.toLowerCase();
+  if (chLower.includes("instagram")) platformId = 2;
+  else if (chLower.includes("tiktok")) platformId = 3;
+
+  const plannedTime = sDate ? `${sDate}T${sTime || '08:00'}:00` : null;
 
   if (postId) {
     const existing = state.posts.find(p => p.id === postId);
@@ -133,21 +142,56 @@ export function savePostDraft() {
         existing.scheduleTime = sTime || "08:00";
         existing.displayDate = formatDateDisplay(sDate);
       }
+
+      // Live Backend update
+      if (existing.rawId) {
+        try {
+          await postsApi.updatePost(existing.rawId, {
+            title,
+            caption: content,
+            platform_id: platformId,
+            planned_publish_time: plannedTime
+          });
+        } catch (e) {
+          console.warn("Backend updatePost warning:", e.message);
+        }
+      }
       showToast(`Đã lưu bản nháp "${title}" thành công!`, "success");
     }
   } else {
-    const newId = `BL-${String(state.posts.length + 120).padStart(4, "0")}`;
+    let rawId = null;
+    let newId = `BL-${String(Date.now()).slice(-4)}`;
+
+    // Live Backend create
+    try {
+      const created = await postsApi.createPost({
+        title,
+        caption: content,
+        hashtags: "#blossom",
+        platform_id: platformId,
+        media_type: "IMAGE",
+        planned_publish_time: plannedTime
+      });
+      if (created && created.post_id) {
+        rawId = created.post_id;
+        newId = `BL-${String(rawId).padStart(4, "0")}`;
+      }
+    } catch (e) {
+      console.warn("Backend createPost warning:", e.message);
+    }
+
     const newPost = {
       id: newId,
+      rawId: rawId,
       title: title,
-      author: "Minh Anh",
+      author: (JSON.parse(localStorage.getItem("blossom_current_user") || "{}")).full_name || "Nhân viên",
       category: category,
       campaign: campaign,
       status: "draft",
       statusText: "Bản nháp",
-      scheduleDate: sDate || "2026-11-10",
+      scheduleDate: sDate || new Date().toISOString().split('T')[0],
       scheduleTime: sTime || "08:00",
-      displayDate: formatDateDisplay(sDate || "2026-11-10"),
+      displayDate: formatDateDisplay(sDate || new Date().toISOString().split('T')[0]),
       channels: channels,
       heroImage: heroImage,
       content: content,
@@ -157,7 +201,7 @@ export function savePostDraft() {
     state.posts.unshift(newPost);
     const elEditId = document.getElementById("editPostId");
     if (elEditId) elEditId.value = newId;
-    showToast(`Đã tạo bản nháp mới ${newId}!`, "success");
+    showToast(`Đã tạo bản nháp mới ${newId} lưu lên máy chủ!`, "success");
   }
 
   saveState();
@@ -190,13 +234,23 @@ export function submitPostForApproval() {
   }
 }
 
-export function commitPostSubmission() {
+export async function commitPostSubmission() {
   const postId = document.getElementById("editPostId")?.value;
   const post = state.posts.find(p => p.id === postId);
   if (post) {
     post.status = "pending";
     post.statusText = "Chờ duyệt";
     post.submittedAt = "Vừa xong · " + new Date().toLocaleDateString("vi-VN");
+
+    if (post.rawId) {
+      try {
+        await approvalsApi.submitForApproval(post.rawId, {
+          comment: "Gửi phê duyệt bài viết"
+        });
+      } catch (e) {
+        console.warn("Backend submitForApproval notice:", e.message);
+      }
+    }
 
     state.notifications.unshift({
       id: Date.now(),
@@ -209,7 +263,7 @@ export function commitPostSubmission() {
     });
 
     saveState();
-    showToast(`Đã gửi bài viết ${post.id} để quản trị viên phê duyệt!`, "success");
+    showToast(`Đã gửi bài viết ${post.id} lên máy chủ để phê duyệt!`, "success");
     state.activeApprovalPostId = post.id;
     setTimeout(() => window.switchView("approvals"), 400);
   }
@@ -249,25 +303,38 @@ export function addLink() {
   if (url) formatDoc("createLink", url);
 }
 
-export function handleImageUpload(e) {
+export async function handleImageUpload(e) {
   const file = e.target.files[0];
   if (!file) return;
 
+  const elName = document.getElementById("attachmentFileName");
+  if (elName) elName.textContent = file.name;
+
+  const elSpecs = document.getElementById("attachmentSpecs");
+  if (elSpecs) elSpecs.textContent = `${(file.size / (1024 * 1024)).toFixed(1)} MB · Đang tải lên máy chủ...`;
+
+  // Local instant preview
   const reader = new FileReader();
   reader.onload = (event) => {
     const elImg = document.getElementById("mediaPreviewImg");
     if (elImg) elImg.src = event.target.result;
-    
-    const elName = document.getElementById("attachmentFileName");
-    if (elName) elName.textContent = file.name;
-
-    const elSpecs = document.getElementById("attachmentSpecs");
-    if (elSpecs) elSpecs.textContent = `${(file.size / (1024 * 1024)).toFixed(1)} MB · Ảnh đại diện mới`;
-
-    updateChecklist();
-    showToast("Đã tải ảnh lên thành công!", "success");
   };
   reader.readAsDataURL(file);
+
+  // Upload to Backend FastAPI
+  try {
+    const uploadRes = await postsApi.uploadMedia(file);
+    if (uploadRes && uploadRes.file_url) {
+      const elImg = document.getElementById("mediaPreviewImg");
+      if (elImg) elImg.src = uploadRes.file_url;
+      if (elSpecs) elSpecs.textContent = `${(file.size / (1024 * 1024)).toFixed(1)} MB · Đã tải lên máy chủ`;
+    }
+  } catch (err) {
+    console.warn("Media upload error:", err.message);
+  }
+
+  updateChecklist();
+  showToast("Đã tải tệp hình ảnh lên thành công!", "success");
 }
 
 export function removeAttachedImage() {

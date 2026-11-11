@@ -3,10 +3,13 @@
  */
 import { state } from '../core/state.js';
 import { showToast } from '../components/toast.js';
+import { analyticsApi } from '../api/analyticsApi.js';
 
-export function updateStatsPeriod() {
+export async function updateStatsPeriod() {
   const select = document.getElementById("statPeriodSelect");
-  const period = select?.value || "2026-11";
+  const periodText = (select && select.options && select.selectedIndex >= 0 && select.options[select.selectedIndex])
+    ? select.options[select.selectedIndex].text
+    : (select?.value || "Thời gian thực");
 
   const elPub = document.getElementById("statKpiPublished");
   const elPubSub = document.getElementById("statKpiPublishedSub");
@@ -17,37 +20,47 @@ export function updateStatsPeriod() {
   const elRate = document.getElementById("statKpiRate");
   const elRateSub = document.getElementById("statKpiRateSub");
 
-  if (period === "2026-11") {
-    if (elPub) elPub.textContent = "96";
-    if (elPubSub) elPubSub.textContent = "↑ 15,2% so với tháng trước";
-    if (elReach) elReach.textContent = "248,6K";
-    if (elReachSub) elReachSub.textContent = "↑ 18,4% so với tháng trước";
-    if (elEngage) elEngage.textContent = "24,8K";
-    if (elEngageSub) elEngageSub.textContent = "↑ 6,4% so với tháng trước";
-    if (elRate) elRate.textContent = "9,98%";
-    if (elRateSub) elRateSub.textContent = "↑ 1,2% so với tháng trước";
-    showToast("Đã cập nhật số liệu: Tháng 11, 2026", "info");
-  } else if (period === "2026-10") {
-    if (elPub) elPub.textContent = "84";
-    if (elPubSub) elPubSub.textContent = "↑ 12,0% so với tháng 9";
-    if (elReach) elReach.textContent = "210,3K";
-    if (elReachSub) elReachSub.textContent = "↑ 14,2% so với tháng 9";
-    if (elEngage) elEngage.textContent = "21,5K";
-    if (elEngageSub) elEngageSub.textContent = "↑ 5,1% so với tháng 9";
-    if (elRate) elRate.textContent = "10,22%";
-    if (elRateSub) elRateSub.textContent = "↑ 0,8% so với tháng 9";
-    showToast("Đã cập nhật số liệu: Tháng 10, 2026", "info");
-  } else if (period === "2026-q3") {
-    if (elPub) elPub.textContent = "250";
-    if (elPubSub) elPubSub.textContent = "↑ 28,5% so với Quý 2";
-    if (elReach) elReach.textContent = "620,5K";
-    if (elReachSub) elReachSub.textContent = "↑ 31,2% so với Quý 2";
-    if (elEngage) elEngage.textContent = "64,1K";
-    if (elEngageSub) elEngageSub.textContent = "↑ 19,4% so với Quý 2";
-    if (elRate) elRate.textContent = "10,33%";
-    if (elRateSub) elRateSub.textContent = "↑ 1,5% so với Quý 2";
-    showToast("Đã cập nhật số liệu: Quý 3, 2026", "info");
+  let publishedCount = 0;
+  let totalReach = 0;
+  let totalEngagement = 0;
+
+  try {
+    const summary = await analyticsApi.getDashboardSummary();
+    if (summary) {
+      publishedCount = summary.total_published_posts || 0;
+      totalReach = summary.total_reach || 0;
+      totalEngagement = summary.total_engagement || 0;
+    }
+  } catch (err) {
+    // If user lacks permission or offline, calculate directly from active posts
+    const publishedPosts = state.posts.filter(p => p.status === "published");
+    publishedCount = publishedPosts.length;
+    publishedPosts.forEach(p => {
+      const reachNum = parseInt(String(p.reach || "").replace(/\D/g, ""), 10) || 0;
+      const engageNum = parseInt(String(p.engagement || "").replace(/\D/g, ""), 10) || 0;
+      totalReach += reachNum;
+      totalEngagement += engageNum;
+    });
   }
+
+  const formatNumber = (num) => {
+    if (num >= 1000000) return (num / 1000000).toFixed(1) + "M";
+    if (num >= 1000) return (num / 1000).toFixed(1) + "K";
+    return String(num);
+  };
+
+  const rate = totalReach > 0 ? ((totalEngagement / totalReach) * 100).toFixed(2) + "%" : "0.00%";
+
+  if (elPub) elPub.textContent = String(publishedCount);
+  if (elPubSub) elPubSub.textContent = "Số bài viết đã xuất bản thực tế";
+  if (elReach) elReach.textContent = formatNumber(totalReach);
+  if (elReachSub) elReachSub.textContent = "Tổng lượt tiếp cận tích lũy";
+  if (elEngage) elEngage.textContent = formatNumber(totalEngagement);
+  if (elEngageSub) elEngageSub.textContent = "Tổng lượt tương tác (Like, Comment, Share)";
+  if (elRate) elRate.textContent = rate;
+  if (elRateSub) elRateSub.textContent = "Tỷ lệ tương tác trung bình";
+
+  showToast(`Đã cập nhật số liệu: ${periodText}`, "info");
 }
 
 export function exportReportData() {
@@ -62,9 +75,9 @@ export function exportReportData() {
         `"${p.channels || 'Facebook & Instagram'}"`,
         `"${p.statusText || p.status}"`,
         `"${p.displayDate || ''}"`,
-        p.reach || "12.840",
-        p.engagement || "1.148",
-        p.engagementRate || "8,94%"
+        p.reach || "0",
+        p.engagement || "0",
+        p.engagementRate || "0%"
       ])
     ];
 
