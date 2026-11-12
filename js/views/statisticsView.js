@@ -4,6 +4,7 @@
 import { state } from '../core/state.js';
 import { showToast } from '../components/toast.js';
 import { analyticsApi } from '../api/analyticsApi.js';
+import { getCurrentUser, isStaff } from '../core/permissions.js';
 
 export async function updateStatsPeriod() {
   const select = document.getElementById("statPeriodSelect");
@@ -64,6 +65,11 @@ export async function updateStatsPeriod() {
 }
 
 export function exportReportData() {
+  const user = getCurrentUser();
+  if (isStaff(user)) {
+    showToast("Chỉ Marketing Manager mới có quyền xuất báo cáo số liệu!", "warning");
+    return;
+  }
   try {
     const rows = [
       ["Mã bài viết", "Tiêu đề bài viết", "Tác giả", "Chuyên mục", "Kênh đăng", "Trạng thái", "Ngày đăng", "Lượt tiếp cận", "Lượt tương tác", "Tỷ lệ tương tác"],

@@ -4,13 +4,20 @@
 
 import { apiClient } from './apiClient.js';
 
+function getDefaultRedirect(path) {
+  if (typeof window !== "undefined" && window.location?.origin) {
+    return `${window.location.origin}${path}`;
+  }
+  return `http://localhost:5500${path}`;
+}
+
 export const socialApi = {
   // --- Facebook & Instagram ---
-  async getFacebookLoginUrl(redirectUri = "http://localhost:5500/oauth/facebook/callback") {
+  async getFacebookLoginUrl(redirectUri = getDefaultRedirect("/oauth/facebook/callback")) {
     return apiClient.get(`social/facebook/login-url?redirect_uri=${encodeURIComponent(redirectUri)}`);
   },
 
-  async exchangeFacebookCode(code, redirectUri = "http://localhost:5500/oauth/facebook/callback") {
+  async exchangeFacebookCode(code, redirectUri = getDefaultRedirect("/oauth/facebook/callback")) {
     return apiClient.post('social/facebook/exchange-token', { code, redirect_uri: redirectUri });
   },
 
@@ -33,11 +40,11 @@ export const socialApi = {
   },
 
   // --- TikTok ---
-  async getTikTokLoginUrl(redirectUri = "http://localhost:5500/oauth/tiktok/callback") {
+  async getTikTokLoginUrl(redirectUri = getDefaultRedirect("/oauth/tiktok/callback")) {
     return apiClient.get(`social/tiktok/login-url?redirect_uri=${encodeURIComponent(redirectUri)}`);
   },
 
-  async exchangeTikTokCode(code, redirectUri = "http://localhost:5500/oauth/tiktok/callback") {
+  async exchangeTikTokCode(code, redirectUri = getDefaultRedirect("/oauth/tiktok/callback")) {
     return apiClient.post('social/tiktok/exchange-token', { code, redirect_uri: redirectUri });
   },
 

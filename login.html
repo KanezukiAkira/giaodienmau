@@ -183,7 +183,8 @@
       btn.innerHTML = '<span>Đang kết nối máy chủ...</span>';
       
       try {
-        const response = await fetch('http://localhost:8000/api/auth/login', {
+        const apiBase = (typeof window !== "undefined" && window.__API_BASE_URL__) || 'https://backend-facj.onrender.com/api';
+        const response = await fetch(`${apiBase}/auth/login`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -209,6 +210,25 @@
         console.warn('Backend login warning:', err);
         if (err.message && (err.message.includes('Failed to fetch') || err.message.includes('NetworkError'))) {
           // Fallback offline mock nếu backend server chưa bật
+          const isStaff = email.toLowerCase().includes('staff');
+          const mockUser = isStaff ? {
+            user_id: 2,
+            username: "staff1",
+            email: "staff1@rikkeilab.vn",
+            full_name: "Trịnh Trần Công Huy (Staff)",
+            role_code: "STAFF",
+            role_name: "Marketing Staff",
+            status: "ACTIVE"
+          } : {
+            user_id: 1,
+            username: "manager",
+            email: "manager@rikkeilab.vn",
+            full_name: "Doãn Thị Minh Anh (Manager)",
+            role_code: "MANAGER",
+            role_name: "Marketing Manager",
+            status: "ACTIVE"
+          };
+          localStorage.setItem('blossom_current_user', JSON.stringify(mockUser));
           sessionStorage.setItem('blossom_logged_in', 'true');
           window.location.href = 'index.html';
         } else {

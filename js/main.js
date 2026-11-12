@@ -6,6 +6,7 @@
 // Core & State
 import { state, saveState, resetToFigmaDefaultData, exportDataJSON, syncDataFromBackend } from './core/state.js';
 import { switchView } from './core/router.js';
+import { switchUserRoleDemo, applyRolePermissionsUI, getCurrentUser } from './core/permissions.js';
 
 // Components
 import { showToast } from './components/toast.js';
@@ -243,7 +244,11 @@ Object.assign(window, {
   toggleAppPasswordVisibility,
   showHelpModal,
   formatDateDisplay,
-  escapeHTML
+  escapeHTML,
+
+  // RBAC & Role Management
+  switchUserRoleDemo,
+  applyRolePermissionsUI
 });
 
 // Global click to close popovers
@@ -251,6 +256,11 @@ document.addEventListener("click", closeAllDropdowns);
 
 // App Bootstrap
 function initApp() {
+  const initialUser = getCurrentUser();
+  if (initialUser && initialUser.role_code) {
+    applyRolePermissionsUI(initialUser);
+  }
+
   renderKanbanBoard();
   renderPostsTable();
   updateMetricsDisplay();
@@ -269,8 +279,11 @@ function initApp() {
     switchView("login");
   } else {
     try {
-      const savedUser = JSON.parse(localStorage.getItem("blossom_current_user"));
-      if (savedUser) updateCurrentUserUI(savedUser);
+      const savedUser = getCurrentUser();
+      if (savedUser && savedUser.role_code) {
+        updateCurrentUserUI(savedUser);
+        applyRolePermissionsUI(savedUser);
+      }
     } catch {}
     switchView("dashboard");
     syncDataFromBackend();

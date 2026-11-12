@@ -5,6 +5,7 @@ import { state, saveState } from '../core/state.js';
 import { escapeHTML } from '../utils/formatters.js';
 import { showToast } from '../components/toast.js';
 import { notificationsApi } from '../api/notificationsApi.js';
+import { getCurrentUser, isStaff } from '../core/permissions.js';
 
 let currentNotifTab = "all";
 
@@ -94,8 +95,17 @@ export async function handleNotifClick(notif) {
     state.activeApprovalPostId = notif.targetPostId;
   }
   if (notif.targetView) {
+    let targetView = notif.targetView;
+    const user = getCurrentUser();
+    if (isStaff(user) && targetView === "approvals") {
+      if (notif.targetPostId && window.openEditPost) {
+        window.openEditPost(notif.targetPostId);
+        return;
+      }
+      targetView = "posts";
+    }
     if (window.switchView) {
-      window.switchView(notif.targetView);
+      window.switchView(targetView);
     }
   }
 }

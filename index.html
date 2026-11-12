@@ -36,13 +36,13 @@
           <span class="nav-label">Lịch đăng bài</span>
         </button>
 
-        <button class="nav-item" data-view="approvals" onclick="switchView('approvals')">
+        <button class="nav-item" data-view="approvals" id="navItemApprovals" onclick="switchView('approvals')">
           <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="8" height="4" x="8" y="2" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/></svg>
           <span class="nav-label">Duyệt bài</span>
           <span class="nav-badge" id="pendingApprovalCount">2</span>
         </button>
 
-        <button class="nav-item" data-view="statistics" onclick="switchView('statistics')">
+        <button class="nav-item" data-view="statistics" id="navItemStatistics" onclick="switchView('statistics')">
           <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20v-6"/><path d="M6 20V10"/><path d="M18 20V4"/></svg>
           <span class="nav-label">Báo cáo & Thống kê</span>
         </button>
@@ -53,7 +53,7 @@
           <span class="nav-badge unread" id="unreadNotifCount">3</span>
         </button>
 
-        <button class="nav-item" data-view="users" onclick="switchView('users')">
+        <button class="nav-item" data-view="users" id="navItemUsers" onclick="switchView('users')">
           <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
           <span class="nav-label">Tài khoản & Phân quyền</span>
         </button>
@@ -136,7 +136,7 @@
               <div class="user-dropdown-divider"></div>
 
               <!-- Menu action: Hồ sơ cá nhân (Node 3:43791) -->
-              <div class="user-dropdown-item" onclick="switchView('users')">
+              <div class="user-dropdown-item" id="dropdownItemProfile" onclick="switchView('users')">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                 <span>Hồ sơ cá nhân</span>
               </div>
@@ -146,6 +146,18 @@
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="7.5" cy="15.5" r="3.5"/><path d="m15 8 6-6m-3 0 3 3m-4.5 1.5 3 3M10 13l4.5-4.5"/></svg>
                 <span>Đổi mật khẩu</span>
               </div>
+
+              <!-- Quick Role Switcher for Demo / Testing RBAC -->
+              <div class="user-dropdown-divider"></div>
+              <div class="user-dropdown-role-switch" style="padding: 6px 12px 10px 12px;">
+                <span style="font-size: 10px; font-weight: 600; color: #a4989d; letter-spacing: 0.5px; text-transform: uppercase; display: block; margin-bottom: 6px;">Phân quyền Demo</span>
+                <div style="display: flex; gap: 6px;">
+                  <button type="button" class="btn btn-secondary btn-sm" id="btnSwitchManager" onclick="switchUserRoleDemo('MANAGER')" style="flex: 1; padding: 5px 4px; font-size: 11px; text-align: center; border-radius: 6px; cursor: pointer;">Quản lý</button>
+                  <button type="button" class="btn btn-secondary btn-sm" id="btnSwitchStaff" onclick="switchUserRoleDemo('STAFF')" style="flex: 1; padding: 5px 4px; font-size: 11px; text-align: center; border-radius: 6px; cursor: pointer;">Nhân viên</button>
+                </div>
+              </div>
+
+              <div class="user-dropdown-divider"></div>
 
               <!-- Menu action: Đăng xuất (Node 3:43797) -->
               <div class="user-dropdown-item logout-action" onclick="handleLogout()">
@@ -638,13 +650,18 @@
               </div>
               <div class="action-group">
                 <button class="btn btn-secondary" onclick="switchView('posts')">Quay lại</button>
-                <button class="btn btn-secondary" onclick="savePostDraft()">Lưu bản nháp</button>
-                <button class="btn btn-primary" onclick="submitPostForApproval()">
+                <button class="btn btn-secondary" id="btnEditorSaveDraft" onclick="savePostDraft()">Lưu bản nháp</button>
+                <button class="btn btn-primary" id="btnEditorSubmitApproval" onclick="submitPostForApproval()">
                   <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
                   <span>Gửi duyệt</span>
                 </button>
               </div>
             </div>
+          </div>
+
+          <!-- Read-Only Banner for Restricted Staff View -->
+          <div id="editorReadOnlyNotice" style="display: none; padding: 12px 18px; margin-bottom: 20px; border-radius: 8px; background: #fff8e1; border: 1px solid #ffe082; color: #8d6b00; font-size: 13px; font-weight: 500;">
+            🔒 <strong>Chế độ xem (Chỉ đọc):</strong> Bạn chỉ có quyền xem nội dung bài viết này. Quyền chỉnh sửa chỉ áp dụng cho Quản lý hoặc Tác giả của bài viết ở trạng thái Nháp / Cần chỉnh sửa.
           </div>
 
           <div class="editorial-grid">
@@ -914,7 +931,7 @@
                 <h1 class="page-title">Chi tiết phê duyệt</h1>
                 <p class="page-subtitle">Kiểm tra nội dung trước khi lan tỏa đến khách hàng.</p>
               </div>
-              <div class="action-group">
+              <div class="action-group" id="approvalActionGroup">
                 <button class="btn btn-secondary" onclick="openRevisionModal()">Yêu cầu chỉnh sửa</button>
                 <button class="btn btn-primary" onclick="approveCurrentPost()">
                   <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>

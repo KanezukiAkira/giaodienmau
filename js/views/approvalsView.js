@@ -5,8 +5,16 @@ import { state, saveState } from '../core/state.js';
 import { escapeHTML } from '../utils/formatters.js';
 import { showToast } from '../components/toast.js';
 import { approvalsApi } from '../api/approvalsApi.js';
+import { getCurrentUser, isStaff, isManager } from '../core/permissions.js';
 
 export function renderApprovalView(postId) {
+  const user = getCurrentUser();
+  const staff = isStaff(user);
+  const actionGroup = document.getElementById("approvalActionGroup");
+  if (actionGroup) {
+    actionGroup.style.display = staff ? "none" : "";
+  }
+
   let post = state.posts.find(p => p.id === postId);
   if (!post) {
     post = state.posts.find(p => p.status === "pending") || state.posts[0];

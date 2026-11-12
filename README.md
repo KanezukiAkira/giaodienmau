@@ -122,9 +122,9 @@ Tệp `js/config/appConfig.js` quy định cấu hình kết nối tới Backend
 
 ```javascript
 export const APP_CONFIG = {
-  API_BASE_URL: "http://localhost:8000/api",
-  WS_BASE_URL: "ws://localhost:8000/api/notifications/ws",
-  ENABLE_MOCK_FALLBACK: true  // Tự động dùng Mock Data nếu Backend chưa online
+  API_BASE_URL: "https://backend-facj.onrender.com/api",
+  WS_BASE_URL: "wss://backend-facj.onrender.com/api/ws/notifications",
+  ENABLE_MOCK_FALLBACK: false  // 100% kết nối dữ liệu thực tế từ TiDB Cloud
 };
 ```
 

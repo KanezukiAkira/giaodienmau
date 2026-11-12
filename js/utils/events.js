@@ -8,6 +8,7 @@ import { closeDeleteModal, closeRevisionModal, closeAddUserModal, closeSubmitApp
 import { closeAllDropdowns } from '../components/dropdown.js';
 import { showToast } from '../components/toast.js';
 import { authApi } from '../api/authApi.js';
+import { applyRolePermissionsUI } from '../core/permissions.js';
 
 export function updateCurrentUserUI(user) {
   if (!user) return;
@@ -28,6 +29,9 @@ export function updateCurrentUserUI(user) {
   if (ddName) ddName.textContent = user.full_name || user.username;
   if (ddEmail) ddEmail.textContent = user.email || "";
   if (ddRole) ddRole.textContent = `${user.role_name || user.role_code} · ${user.status || 'ACTIVE'}`;
+
+  // Apply role-based visibility to navigation and panels
+  applyRolePermissionsUI(user);
 }
 
 export function setupKeyboardShortcuts() {
@@ -110,8 +114,28 @@ export async function handleAppLoginSubmit(e) {
       showToast(err.message || "Tài khoản hoặc mật khẩu không chính xác!", "danger");
     } else {
       // Fallback chế độ offline mock nếu server FastAPI chưa bật
+      const isStaffUser = usernameOrEmail.toLowerCase().includes('staff');
+      const mockUser = isStaffUser ? {
+        user_id: 2,
+        username: "staff1",
+        email: "staff1@rikkeilab.vn",
+        full_name: "Trịnh Trần Công Huy (Staff)",
+        role_code: "STAFF",
+        role_name: "Marketing Staff",
+        status: "ACTIVE"
+      } : {
+        user_id: 1,
+        username: "manager",
+        email: "manager@rikkeilab.vn",
+        full_name: "Doãn Thị Minh Anh (Manager)",
+        role_code: "MANAGER",
+        role_name: "Marketing Manager",
+        status: "ACTIVE"
+      };
+      localStorage.setItem("blossom_current_user", JSON.stringify(mockUser));
       sessionStorage.setItem("blossom_logged_in", "true");
-      showToast("Chế độ Offline Mock (Máy chủ Backend chưa phản hồi)", "warning");
+      updateCurrentUserUI(mockUser);
+      showToast(`Chế độ Offline Mock (${mockUser.role_name})`, "info");
       switchView("dashboard");
     }
   } finally {

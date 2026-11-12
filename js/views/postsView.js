@@ -5,6 +5,7 @@ import { state, saveState } from '../core/state.js';
 import { escapeHTML } from '../utils/formatters.js';
 import { showToast } from '../components/toast.js';
 import { postsApi } from '../api/postsApi.js';
+import { getCurrentUser, isManager, isStaff, canEditPost, canDeletePost } from '../core/permissions.js';
 
 export function updateMetricsDisplay() {
   const total = state.posts.length;
@@ -95,7 +96,10 @@ export function renderPostsTable() {
 export function handlePostTitleClick(postId) {
   const post = state.posts.find(p => p.id === postId);
   if (!post) return;
-  if (post.status === "pending") {
+  const user = getCurrentUser();
+  const staff = isStaff(user);
+
+  if (post.status === "pending" && !staff) {
     state.activeApprovalPostId = postId;
     if (window.switchView) window.switchView("approvals");
   } else {
@@ -104,6 +108,12 @@ export function handlePostTitleClick(postId) {
 }
 
 export async function handleAutoPublishNow(postId) {
+  const user = getCurrentUser();
+  if (isStaff(user)) {
+    showToast("Tính năng tự động xuất bản API chỉ dành riêng cho Quản lý!", "warning");
+    return;
+  }
+
   const post = state.posts.find(p => p.id === postId);
   if (!post) return;
 
@@ -148,6 +158,10 @@ export function renderPostsRows(posts) {
   }
   if (emptyState) emptyState.style.display = "none";
 
+  const user = getCurrentUser();
+  const mgr = isManager(user);
+  const stf = isStaff(user);
+
   posts.forEach(post => {
     const tr = document.createElement("tr");
 
@@ -159,6 +173,19 @@ export function renderPostsRows(posts) {
 
     const isPublishable = post.status === "approved" || post.status === "scheduled";
     const isPublished = post.status === "published";
+
+    const isOwnPost = Boolean(
+      (post.authorId && user.user_id && post.authorId === user.user_id) ||
+      (user.full_name && post.author && post.author.includes(user.full_name)) ||
+      (user.username && post.author && post.author.toLowerCase().includes(user.username.toLowerCase())) ||
+      post.isMine
+    );
+
+    const canEdit = canEditPost(post, user);
+    const canDelete = canDeletePost(post, user);
+    const canAutoPublish = isPublishable && mgr;
+    const canConfirmPublish = isPublishable && (mgr || isOwnPost);
+    const canUpdateMetrics = isPublished && mgr;
 
     tr.innerHTML = `
       <td>
@@ -179,10 +206,12 @@ export function renderPostsRows(posts) {
       <td>${post.displayDate}</td>
       <td style="text-align: right;">
         <div class="row-actions">
-          ${isPublishable ? `
-            <button class="action-icon-btn" style="color: #0d47a1; background: #e3f2fd; border-color: #90caf9;" onclick="window.handleAutoPublishNow('${post.id}')" title="Tự động đăng ngay 100% qua API">
+          ${canAutoPublish ? `
+            <button class="action-icon-btn" style="color: #0d47a1; background: #e3f2fd; border-color: #90caf9;" onclick="window.handleAutoPublishNow('${post.id}')" title="Tự động đăng ngay 100% qua API (Quản lý)">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
             </button>
+          ` : ''}
+          ${canConfirmPublish ? `
             <button class="action-icon-btn" style="color: #2e7d32; border-color: #a5d6a7;" onclick="window.openConfirmPublishModal('${post.id}')" title="Xác nhận đã đăng bài thủ công (MOD-06)">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
             </button>
@@ -193,16 +222,26 @@ export function renderPostsRows(posts) {
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
               </a>
             ` : ''}
-            <button class="action-icon-btn" style="color: #7b1fa2;" onclick="window.openMetricsModal('${post.id}')" title="Cập nhật hoặc đồng bộ chỉ số (MOD-07)">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+            ${canUpdateMetrics ? `
+              <button class="action-icon-btn" style="color: #7b1fa2;" onclick="window.openMetricsModal('${post.id}')" title="Cập nhật hoặc đồng bộ chỉ số (MOD-07 Quản lý)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+              </button>
+            ` : ''}
+          ` : ''}
+          ${canEdit ? `
+            <button class="action-icon-btn" onclick="window.openEditPost('${post.id}')" title="Chỉnh sửa bài viết">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
+            </button>
+          ` : `
+            <button class="action-icon-btn" onclick="window.openEditPost('${post.id}')" title="Xem chi tiết (Chỉ đọc)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          `}
+          ${canDelete ? `
+            <button class="action-icon-btn danger" onclick="window.openDeleteModal('${post.id}')" title="Xóa bài viết">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
             </button>
           ` : ''}
-          <button class="action-icon-btn" onclick="window.openEditPost('${post.id}')" title="Chỉnh sửa">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
-          </button>
-          <button class="action-icon-btn danger" onclick="window.openDeleteModal('${post.id}')" title="Xóa bài viết">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-          </button>
         </div>
       </td>
     `;

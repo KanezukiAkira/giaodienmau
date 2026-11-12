@@ -5,6 +5,7 @@ import { state, saveState } from '../core/state.js';
 import { escapeHTML } from '../utils/formatters.js';
 import { showToast } from '../components/toast.js';
 import { renderPostsTable, handlePostTitleClick } from './postsView.js';
+import { getCurrentUser, isStaff } from '../core/permissions.js';
 
 let draggedPostId = null;
 
@@ -22,6 +23,12 @@ function formatShortDate(dateStr) {
 }
 
 export function setBoardTab(tab) {
+  const user = getCurrentUser();
+  if (tab === "member" && isStaff(user)) {
+    showToast("Tính năng Theo dõi thành viên chỉ dành riêng cho Quản lý!", "warning");
+    return;
+  }
+
   document.getElementById("btnKanbanBoardTab")?.classList.toggle("active", tab === "board");
   document.getElementById("btnKanbanMemberTab")?.classList.toggle("active", tab === "member");
   
@@ -214,6 +221,12 @@ export function handleDrop(e, targetStatus) {
 
   const postId = draggedPostId || e.dataTransfer.getData("text/plain");
   if (!postId) return;
+
+  const user = getCurrentUser();
+  if (isStaff(user) && (targetStatus === "scheduled" || targetStatus === "revising" || targetStatus === "published")) {
+    showToast("Chỉ Quản lý (Manager) mới có quyền phê duyệt hoặc yêu cầu chỉnh sửa bài viết!", "warning");
+    return;
+  }
 
   const post = state.posts.find(p => p.id === postId);
   if (!post) return;

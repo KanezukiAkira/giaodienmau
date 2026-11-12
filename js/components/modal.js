@@ -10,11 +10,20 @@ import { usersApi } from '../api/usersApi.js';
 import { trackingApi } from '../api/trackingApi.js';
 import { analyticsApi } from '../api/analyticsApi.js';
 import { socialApi } from '../api/socialApi.js';
+import { getCurrentUser, isStaff, canDeletePost } from '../core/permissions.js';
 
 // --- Delete Confirmation Modal ---
 export function openDeleteModal(postId) {
-  state.deleteTargetPostId = postId;
   const post = state.posts.find(p => p.id === postId);
+  if (post) {
+    const user = getCurrentUser();
+    if (!canDeletePost(post, user)) {
+      showToast("Bạn chỉ có quyền xóa bài viết do chính mình tạo ở trạng thái Nháp hoặc Bị từ chối!", "warning");
+      return;
+    }
+  }
+
+  state.deleteTargetPostId = postId;
   if (post) {
     const codeStatusEl = document.getElementById("deletePostCodeStatus");
     const titleEl = document.getElementById("deletePostTitleDisplay");
@@ -145,6 +154,11 @@ export function confirmSubmitPostForApproval() {
 
 // --- Add User Modal ---
 export function openAddUserModal() {
+  const user = getCurrentUser();
+  if (isStaff(user)) {
+    showToast("Chỉ Marketing Manager mới có quyền thêm người dùng mới!", "warning");
+    return;
+  }
   document.getElementById("addUserModal")?.classList.add("show");
 }
 
@@ -280,6 +294,11 @@ export async function submitConfirmPublish() {
 
 // --- MOD-07 & Social: Post Metrics Modal ---
 export function openMetricsModal(postId) {
+  const user = getCurrentUser();
+  if (isStaff(user)) {
+    showToast("Chỉ Marketing Manager mới có quyền cập nhật và đồng bộ chỉ số đo lường!", "warning");
+    return;
+  }
   state.metricsTargetPostId = postId;
   const post = state.posts.find(p => p.id === postId);
   if (post) {

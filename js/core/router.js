@@ -1,17 +1,38 @@
 /**
- * View Router: SPA Screen Switching
+ * View Router: SPA Screen Switching with Role-Based Route Guards
  */
 import { state } from './state.js';
 import { showToast } from '../components/toast.js';
 import { closeAllDropdowns } from '../components/dropdown.js';
+import { canAccessView, getCurrentUser, applyRolePermissionsUI } from './permissions.js';
 import { renderKanbanBoard } from '../views/dashboardView.js';
 import { renderPostsTable } from '../views/postsView.js';
 import { renderCalendar } from '../views/calendarView.js';
 import { renderApprovalView } from '../views/approvalsView.js';
 import { renderNotificationsList } from '../views/notificationsView.js';
 import { renderUsersTable } from '../views/usersView.js';
+import { updateStatsPeriod } from '../views/statisticsView.js';
 
 export function switchView(viewName) {
+  const user = getCurrentUser();
+
+  // Role Guard: Check if the role is permitted to view this module
+  if (!canAccessView(viewName, user)) {
+    let warningMsg = "Bạn không có quyền truy cập tính năng này!";
+    if (viewName === "users") {
+      warningMsg = "Chức năng Quản lý Người dùng & Phân quyền chỉ dành riêng cho Marketing Manager!";
+    } else if (viewName === "statistics") {
+      warningMsg = "Chức năng Báo cáo & Thống kê chỉ dành riêng cho Marketing Manager!";
+    } else if (viewName === "approvals") {
+      warningMsg = "Chức năng Phê duyệt bài viết chỉ dành riêng cho Marketing Manager!";
+    }
+    showToast(warningMsg, "warning");
+    if (state.currentView !== "dashboard") {
+      switchView("dashboard");
+    }
+    return;
+  }
+
   state.currentView = viewName;
 
   // Toggle auth-mode on app container for full-bleed Login view
@@ -42,6 +63,9 @@ export function switchView(viewName) {
     }
   });
 
+  // Ensure role permissions are applied to navigation and UI
+  applyRolePermissionsUI(user);
+
   // Close any popovers
   closeAllDropdowns();
 
@@ -57,14 +81,9 @@ export function switchView(viewName) {
   } else if (viewName === "notifications") {
     renderNotificationsList();
   } else if (viewName === "users") {
-    const user = JSON.parse(localStorage.getItem("blossom_current_user") || "{}");
-    if (user.role_code === "STAFF" || user.role_id === 2) {
-      showToast("Chức năng Quản lý Người dùng & Phân quyền chỉ dành riêng cho Marketing Manager!", "warning");
-      // Fallback back to dashboard
-      switchView("dashboard");
-      return;
-    }
     renderUsersTable();
+  } else if (viewName === "statistics") {
+    updateStatsPeriod();
   }
 
   window.scrollTo({ top: 0, behavior: 'smooth' });

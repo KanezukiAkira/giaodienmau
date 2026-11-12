@@ -6,6 +6,7 @@ import { showToast } from '../components/toast.js';
 import { formatDateDisplay } from '../utils/formatters.js';
 import { postsApi } from '../api/postsApi.js';
 import { approvalsApi } from '../api/approvalsApi.js';
+import { getCurrentUser, isManager, isStaff, canEditPost } from '../core/permissions.js';
 
 export function openCreatePost() {
   const elEditId = document.getElementById("editPostId");
@@ -18,22 +19,42 @@ export function openCreatePost() {
   if (elBreadcrumb) elBreadcrumb.textContent = "Tạo bài viết";
 
   const elTitle = document.getElementById("postTitleInput");
-  if (elTitle) elTitle.value = "";
+  if (elTitle) {
+    elTitle.value = "";
+    elTitle.readOnly = false;
+  }
+
+  const user = getCurrentUser();
+  const elAuthor = document.getElementById("postAuthorInput");
+  if (elAuthor) elAuthor.value = user.full_name || user.username || "Nhân viên biên tập";
 
   const elCat = document.getElementById("postCategorySelect");
-  if (elCat) elCat.value = "Chăm sóc da";
+  if (elCat) {
+    elCat.value = "Chăm sóc da";
+    elCat.disabled = false;
+  }
 
   const elCamp = document.getElementById("postCampaignSelect");
-  if (elCamp) elCamp.value = "Nâng niu làn da · Tháng 11";
+  if (elCamp) {
+    elCamp.value = "Nâng niu làn da · Tháng 11";
+    elCamp.disabled = false;
+  }
 
   const elChannels = document.getElementById("postChannelsSelect");
-  if (elChannels) elChannels.value = "Facebook & Instagram";
+  if (elChannels) {
+    elChannels.value = "Facebook & Instagram";
+    elChannels.disabled = false;
+  }
 
   const elSchedule = document.getElementById("postScheduleTimeInput");
-  if (elSchedule) elSchedule.value = "2026-11-09T08:00";
+  if (elSchedule) {
+    elSchedule.value = "2026-11-09T08:00";
+    elSchedule.disabled = false;
+  }
 
   const elBody = document.getElementById("articleBodyContent");
   if (elBody) {
+    elBody.contentEditable = "true";
     elBody.innerHTML = `
       <h2 style="font-family: 'Playfair Display', serif; font-size: 22px; color: #574b50; margin-bottom: 12px;">Tiêu đề đoạn mở đầu...</h2>
       <p style="margin-bottom: 12px;">Nhập nội dung chia sẻ cảm hứng và bí quyết làm đẹp tại đây...</p>
@@ -56,6 +77,13 @@ export function openCreatePost() {
   const alertEl = document.getElementById("editorRevisionAlert");
   if (alertEl) alertEl.style.display = "none";
 
+  const btnDraft = document.getElementById("btnEditorSaveDraft");
+  if (btnDraft) btnDraft.style.display = "";
+  const btnSubmit = document.getElementById("btnEditorSubmitApproval");
+  if (btnSubmit) btnSubmit.style.display = "";
+  const notice = document.getElementById("editorReadOnlyNotice");
+  if (notice) notice.style.display = "none";
+
   updateWordCount();
   updateChecklist();
   window.switchView("editor");
@@ -65,35 +93,60 @@ export function openEditPost(postId) {
   const post = state.posts.find(p => p.id === postId);
   if (!post) return;
 
+  const user = getCurrentUser();
+  const editable = canEditPost(post, user);
+
   const elEditId = document.getElementById("editPostId");
   if (elEditId) elEditId.value = post.id;
 
   const elHeading = document.getElementById("editorTitleHeading");
-  if (elHeading) elHeading.textContent = "Chỉnh sửa bài viết";
-
   const elBreadcrumb = document.getElementById("editorBreadcrumbAction");
-  if (elBreadcrumb) elBreadcrumb.textContent = `Chỉnh sửa / ${post.id}`;
-
   const elTitle = document.getElementById("postTitleInput");
-  if (elTitle) elTitle.value = post.title;
-
   const elCat = document.getElementById("postCategorySelect");
-  if (elCat) elCat.value = post.category || "Chăm sóc da";
-
   const elCamp = document.getElementById("postCampaignSelect");
-  if (elCamp) elCamp.value = post.campaign || "Nâng niu làn da · Tháng 11";
-
   const elChannels = document.getElementById("postChannelsSelect");
-  if (elChannels) elChannels.value = post.channels || "Facebook & Instagram";
-
   const elAuthor = document.getElementById("postAuthorInput");
+  const elSchedule = document.getElementById("postScheduleTimeInput");
+  const elBody = document.getElementById("articleBodyContent");
+  const btnDraft = document.getElementById("btnEditorSaveDraft");
+  const btnSubmit = document.getElementById("btnEditorSubmitApproval");
+  const notice = document.getElementById("editorReadOnlyNotice");
+
+  if (!editable) {
+    if (notice) notice.style.display = "block";
+    if (btnDraft) btnDraft.style.display = "none";
+    if (btnSubmit) btnSubmit.style.display = "none";
+    if (elHeading) elHeading.textContent = `Chi tiết bài viết (${post.statusText})`;
+    if (elBreadcrumb) elBreadcrumb.textContent = `Chế độ chỉ xem / ${post.id}`;
+    if (elTitle) elTitle.readOnly = true;
+    if (elBody) elBody.contentEditable = "false";
+    if (elCat) elCat.disabled = true;
+    if (elCamp) elCamp.disabled = true;
+    if (elChannels) elChannels.disabled = true;
+    if (elSchedule) elSchedule.disabled = true;
+  } else {
+    if (notice) notice.style.display = "none";
+    if (btnDraft) btnDraft.style.display = "";
+    if (btnSubmit) btnSubmit.style.display = "";
+    if (elHeading) elHeading.textContent = "Chỉnh sửa bài viết";
+    if (elBreadcrumb) elBreadcrumb.textContent = `Chỉnh sửa / ${post.id}`;
+    if (elTitle) elTitle.readOnly = false;
+    if (elBody) elBody.contentEditable = "true";
+    if (elCat) elCat.disabled = false;
+    if (elCamp) elCamp.disabled = false;
+    if (elChannels) elChannels.disabled = false;
+    if (elSchedule) elSchedule.disabled = false;
+  }
+
+  if (elTitle) elTitle.value = post.title;
+  if (elCat) elCat.value = post.category || "Chăm sóc da";
+  if (elCamp) elCamp.value = post.campaign || "Nâng niu làn da · Tháng 11";
+  if (elChannels) elChannels.value = post.channels || "Facebook & Instagram";
   if (elAuthor) elAuthor.value = post.author;
   
   const formattedSchedule = post.scheduleDate ? `${post.scheduleDate}T${post.scheduleTime || '08:00'}` : "2026-11-05T08:00";
-  const elSchedule = document.getElementById("postScheduleTimeInput");
   if (elSchedule) elSchedule.value = formattedSchedule;
 
-  const elBody = document.getElementById("articleBodyContent");
   if (elBody) elBody.innerHTML = post.content || "";
 
   if (post.heroImage) {
@@ -287,9 +340,17 @@ export async function commitPostSubmission() {
     });
 
     saveState();
-    showToast(`Đã gửi bài viết ${post.id} lên máy chủ để phê duyệt!`, "success");
-    state.activeApprovalPostId = post.id;
-    setTimeout(() => window.switchView("approvals"), 400);
+    const user = getCurrentUser();
+    const staff = isStaff(user);
+
+    if (staff) {
+      showToast(`Đã gửi bài viết ${post.id} lên máy chủ để Quản lý phê duyệt!`, "success");
+      setTimeout(() => window.switchView("posts"), 400);
+    } else {
+      showToast(`Đã gửi bài viết ${post.id} lên máy chủ để phê duyệt!`, "success");
+      state.activeApprovalPostId = post.id;
+      setTimeout(() => window.switchView("approvals"), 400);
+    }
   }
 }
 
@@ -304,7 +365,7 @@ export function updateWordCount() {
 }
 
 export function updateChecklist() {
-  const title = document.getElementById("postTitleInput")?.value.trim();
+  const title = (document.getElementById("postTitleInput")?.value || "").trim();
   const schedule = document.getElementById("postScheduleTimeInput")?.value;
   const image = document.getElementById("mediaPreviewImg")?.src;
 

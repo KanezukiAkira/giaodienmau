@@ -6,6 +6,7 @@ import { state, saveState } from '../core/state.js';
 import { escapeHTML } from '../utils/formatters.js';
 import { showToast } from '../components/toast.js';
 import { usersApi } from '../api/usersApi.js';
+import { getCurrentUser, isStaff } from '../core/permissions.js';
 
 let selectedUserId = 1;
 
