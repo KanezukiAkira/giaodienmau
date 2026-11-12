@@ -147,16 +147,6 @@
                 <span>Đổi mật khẩu</span>
               </div>
 
-              <!-- Quick Role Switcher for Demo / Testing RBAC -->
-              <div class="user-dropdown-divider"></div>
-              <div class="user-dropdown-role-switch" style="padding: 6px 12px 10px 12px;">
-                <span style="font-size: 10px; font-weight: 600; color: #a4989d; letter-spacing: 0.5px; text-transform: uppercase; display: block; margin-bottom: 6px;">Phân quyền Demo</span>
-                <div style="display: flex; gap: 6px;">
-                  <button type="button" class="btn btn-secondary btn-sm" id="btnSwitchManager" onclick="switchUserRoleDemo('MANAGER')" style="flex: 1; padding: 5px 4px; font-size: 11px; text-align: center; border-radius: 6px; cursor: pointer;">Quản lý</button>
-                  <button type="button" class="btn btn-secondary btn-sm" id="btnSwitchStaff" onclick="switchUserRoleDemo('STAFF')" style="flex: 1; padding: 5px 4px; font-size: 11px; text-align: center; border-radius: 6px; cursor: pointer;">Nhân viên</button>
-                </div>
-              </div>
-
               <div class="user-dropdown-divider"></div>
 
               <!-- Menu action: Đăng xuất (Node 3:43797) -->
@@ -1348,7 +1338,6 @@
                 </div>
                 <select class="account-filter-select" id="userFilterRole" onchange="filterUsersTable()">
                   <option value="">Tất cả vai trò</option>
-                  <option value="Quản trị viên">Quản trị viên</option>
                   <option value="Quản lý">Quản lý</option>
                   <option value="Biên tập viên">Biên tập viên</option>
                 </select>
@@ -1403,7 +1392,6 @@
                 <label>Vai trò được phân công</label>
                 <select class="dialog-input" id="detailUserRoleSelect" onchange="updateSelectedUserRole()">
                   <option value="Quản lý" selected>Quản lý</option>
-                  <option value="Quản trị viên">Quản trị viên</option>
                   <option value="Biên tập viên">Biên tập viên</option>
                 </select>
               </div>
@@ -1446,7 +1434,6 @@
               <thead>
                 <tr>
                   <th>CHỨC NĂNG</th>
-                  <th>Quản trị viên</th>
                   <th>Quản lý</th>
                   <th>Nhân viên</th>
                 </tr>
@@ -1455,20 +1442,22 @@
                 <tr>
                   <td class="dim">Bài viết & Lịch đăng bài</td>
                   <td>✓ Toàn quyền</td>
-                  <td>✓ Toàn quyền</td>
-                  <td class="dim">Tạo & chỉnh sửa</td>
+                  <td class="dim">Tạo & chỉnh sửa bài viết</td>
                 </tr>
                 <tr>
-                  <td class="dim">Duyệt bài</td>
-                  <td>✓ Toàn quyền</td>
-                  <td>✓ Toàn quyền</td>
-                  <td class="dim">Chỉ xem</td>
+                  <td class="dim">Duyệt bài viết</td>
+                  <td>✓ Toàn quyền (Duyệt / Từ chối)</td>
+                  <td class="dim">Gửi duyệt (Chỉ xem)</td>
                 </tr>
                 <tr>
                   <td class="dim">Báo cáo & Thống kê</td>
-                  <td>✓ Toàn quyền</td>
-                  <td class="dim">Chỉ xem</td>
-                  <td class="dim">—</td>
+                  <td>✓ Xem & Xuất báo cáo</td>
+                  <td class="dim">— Không có quyền</td>
+                </tr>
+                <tr>
+                  <td class="dim">Quản lý người dùng</td>
+                  <td>✓ Xem & Quản lý vai trò</td>
+                  <td class="dim">— Không có quyền</td>
                 </tr>
               </tbody>
             </table>
@@ -1791,7 +1780,6 @@
         <select id="newUserRole" class="dialog-input">
           <option value="Quản lý">Quản lý (Quản lý bài viết, lịch đăng, duyệt nội dung & xem báo cáo)</option>
           <option value="Biên tập viên">Biên tập viên (Tạo, chỉnh sửa & gửi duyệt bài viết)</option>
-          <option value="Quản trị viên">Quản trị viên (Toàn quyền quản trị hệ thống & phân quyền)</option>
         </select>
       </div>
 

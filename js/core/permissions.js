@@ -130,32 +130,6 @@ export function applyRolePermissionsUI(user = getCurrentUser()) {
   if (roleEl) {
     roleEl.textContent = manager ? "Marketing Manager" : (staff ? "Marketing Staff" : (user.role_name || "Thành viên"));
   }
-
-  // 6. Update Demo Role Switcher Buttons UI
-  const btnMgr = document.getElementById("btnSwitchManager");
-  const btnStf = document.getElementById("btnSwitchStaff");
-  if (btnMgr) {
-    if (manager) {
-      btnMgr.style.backgroundColor = "#cc618a";
-      btnMgr.style.color = "#ffffff";
-      btnMgr.style.fontWeight = "600";
-    } else {
-      btnMgr.style.backgroundColor = "";
-      btnMgr.style.color = "";
-      btnMgr.style.fontWeight = "";
-    }
-  }
-  if (btnStf) {
-    if (staff) {
-      btnStf.style.backgroundColor = "#cc618a";
-      btnStf.style.color = "#ffffff";
-      btnStf.style.fontWeight = "600";
-    } else {
-      btnStf.style.backgroundColor = "";
-      btnStf.style.color = "";
-      btnStf.style.fontWeight = "";
-    }
-  }
 }
 
 /**
