@@ -152,6 +152,7 @@ export async function syncDataFromBackend() {
     if (window.updateMetricsDisplay) window.updateMetricsDisplay();
     if (window.updateNotifCounters) window.updateNotifCounters();
     if (window.updateStatsPeriod) window.updateStatsPeriod();
+    if (window.renderStatisticsDashboard) window.renderStatisticsDashboard();
 
     console.log("✓ Live data synchronized from Backend FastAPI & MySQL!");
   } catch (err) {

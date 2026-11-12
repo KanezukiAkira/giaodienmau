@@ -353,8 +353,8 @@
               </div>
               <div class="metric-info">
                 <span class="metric-label">Hoàn thành kế hoạch</span>
-                <span class="metric-value">75%</span>
-                <span class="metric-sub success">96 / 128 bài đã xuất bản</span>
+                <span class="metric-value" id="kpiCompletionPct">0%</span>
+                <span class="metric-sub success" id="kpiCompletionSub">0 / 0 bài đã xuất bản</span>
               </div>
             </div>
 
@@ -364,8 +364,8 @@
               </div>
               <div class="metric-info">
                 <span class="metric-label">Đúng tiến độ</span>
-                <span class="metric-value">92%</span>
-                <span class="metric-sub success">↑ 4% so với tháng trước</span>
+                <span class="metric-value" id="kpiOnSchedulePct">100%</span>
+                <span class="metric-sub success" id="kpiOnScheduleSub">Toàn bộ bài viết đúng hạn</span>
               </div>
             </div>
 
@@ -375,8 +375,8 @@
               </div>
               <div class="metric-info">
                 <span class="metric-label">Cần xử lý hôm nay</span>
-                <span class="metric-value">08</span>
-                <span class="metric-sub success">3 bài duyệt · 5 chỉnh sửa</span>
+                <span class="metric-value" id="kpiUrgentToday">00</span>
+                <span class="metric-sub success" id="kpiUrgentTodaySub">0 bài duyệt · 0 chỉnh sửa</span>
               </div>
             </div>
 
@@ -386,8 +386,8 @@
               </div>
               <div class="metric-info">
                 <span class="metric-label">Quá hạn</span>
-                <span class="metric-value">02</span>
-                <span class="metric-sub success">Cần ưu tiên xử lý</span>
+                <span class="metric-value" id="kpiOverdue">00</span>
+                <span class="metric-sub success" id="kpiOverdueSub">Tất cả đúng hạn</span>
               </div>
             </div>
           </div>
@@ -466,7 +466,7 @@
             </div>
             <div class="priority-insight-content">
               <h4 class="priority-insight-title">Ưu tiên hôm nay</h4>
-              <p class="priority-insight-desc">Duyệt bài BL-0127 trước 17:00 để giữ lịch đăng ngày 05/11. Hai bài quá hạn cần được phân công lại.</p>
+              <p class="priority-insight-desc" id="priorityInsightDesc">Đang cập nhật tiến độ công việc từ hệ thống...</p>
             </div>
             <button class="priority-insight-action-btn" onclick="switchView('approvals')">
               <span>Xem công việc →</span>
@@ -1108,25 +1108,24 @@
               </div>
 
               <div class="chart-kpi">
-                <span class="kpi-num">128 bài viết</span>
-                <span class="badge badge-success">↑ 12,8%</span>
+                <span class="kpi-num" id="statMonthlyPostCount">0 bài viết</span>
+                <span class="badge badge-success" id="statMonthlyGrowth">Tổng số bài viết</span>
               </div>
 
               <!-- Interactive SVG Trend Chart -->
-              <!-- Interactive SVG Trend Chart -->
               <div class="svg-chart-container" id="monthlyChartWrapper">
                 <div class="chart-axes-and-plot">
-                  <!-- Value Y-Axis from Figma (150, 100, 50, 0) -->
-                  <div class="chart-value-axis">
-                    <span>150</span>
+                  <!-- Value Y-Axis -->
+                  <div class="chart-value-axis" id="trendChartYAxis">
                     <span>100</span>
                     <span>50</span>
+                    <span>25</span>
                     <span>0</span>
                   </div>
 
                   <!-- Plot Area -->
                   <div class="chart-plot-area">
-                    <svg class="trend-chart-svg" viewBox="0 0 690 190" preserveAspectRatio="none">
+                    <svg class="trend-chart-svg" id="trendChartSvg" viewBox="0 0 690 190" preserveAspectRatio="none">
                       <defs>
                         <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
                           <stop offset="0%" stop-color="#cc618a" stop-opacity="0.25"/>
@@ -1134,31 +1133,22 @@
                         </linearGradient>
                       </defs>
 
-                      <!-- Grid lines matching Y-axis ticks (Figma) -->
+                      <!-- Grid lines matching Y-axis ticks -->
                       <line x1="0" y1="12" x2="690" y2="12" stroke="#fce4ed" stroke-width="1" stroke-dasharray="3 3"/>
                       <line x1="0" y1="68" x2="690" y2="68" stroke="#fce4ed" stroke-width="1" stroke-dasharray="3 3"/>
                       <line x1="0" y1="124" x2="690" y2="124" stroke="#fce4ed" stroke-width="1" stroke-dasharray="3 3"/>
                       <line x1="0" y1="180" x2="690" y2="180" stroke="#f2dfe7" stroke-width="1"/>
 
                       <!-- Area fill (closed path) -->
-                      <path d="M 30 149 C 39.50 147.00, 68.00 140.50, 87 137 C 106.00 133.50, 124.83 131.67, 144 128 C 163.17 124.33, 182.83 119.33, 202 115 C 221.17 110.67, 240.00 105.33, 259 102 C 278.00 98.67, 296.83 97.33, 316 95 C 335.17 92.67, 354.83 91.33, 374 88 C 393.17 84.67, 412.00 79.50, 431 75 C 450.00 70.50, 469.00 65.00, 488 61 C 507.00 57.00, 525.83 54.00, 545 51 C 564.17 48.00, 583.83 45.33, 603 43 C 622.17 40.67, 650.50 38.00, 660 37 L 660 180 L 30 180 Z" fill="url(#chartGrad)"/>
+                      <path id="trendChartArea" d="M 30 180 L 660 180 Z" fill="url(#chartGrad)"/>
 
-                      <!-- Curved line (exact spline passing through each circle) -->
-                      <path d="M 30 149 C 39.50 147.00, 68.00 140.50, 87 137 C 106.00 133.50, 124.83 131.67, 144 128 C 163.17 124.33, 182.83 119.33, 202 115 C 221.17 110.67, 240.00 105.33, 259 102 C 278.00 98.67, 296.83 97.33, 316 95 C 335.17 92.67, 354.83 91.33, 374 88 C 393.17 84.67, 412.00 79.50, 431 75 C 450.00 70.50, 469.00 65.00, 488 61 C 507.00 57.00, 525.83 54.00, 545 51 C 564.17 48.00, 583.83 45.33, 603 43 C 622.17 40.67, 650.50 38.00, 660 37" fill="none" stroke="#cc618a" stroke-width="2.5" stroke-linecap="round"/>
+                      <!-- Curved line -->
+                      <path id="trendChartLine" d="M 30 180 L 660 180" fill="none" stroke="#cc618a" stroke-width="2.5" stroke-linecap="round"/>
 
-                      <!-- Data Points (perfectly centered on the line) -->
-                      <circle cx="30" cy="149" r="4" fill="#ffffff" stroke="#cc618a" stroke-width="2.5" class="chart-point" data-info="T1: 28 bài viết"/>
-                      <circle cx="87" cy="137" r="4" fill="#ffffff" stroke="#cc618a" stroke-width="2.5" class="chart-point" data-info="T2: 38 bài viết"/>
-                      <circle cx="144" cy="128" r="4" fill="#ffffff" stroke="#cc618a" stroke-width="2.5" class="chart-point" data-info="T3: 46 bài viết"/>
-                      <circle cx="202" cy="115" r="4" fill="#ffffff" stroke="#cc618a" stroke-width="2.5" class="chart-point" data-info="T4: 58 bài viết"/>
-                      <circle cx="259" cy="102" r="4" fill="#ffffff" stroke="#cc618a" stroke-width="2.5" class="chart-point" data-info="T5: 70 bài viết"/>
-                      <circle cx="316" cy="95" r="4" fill="#ffffff" stroke="#cc618a" stroke-width="2.5" class="chart-point" data-info="T6: 76 bài viết"/>
-                      <circle cx="374" cy="88" r="4" fill="#ffffff" stroke="#cc618a" stroke-width="2.5" class="chart-point" data-info="T7: 82 bài viết"/>
-                      <circle cx="431" cy="75" r="4" fill="#ffffff" stroke="#cc618a" stroke-width="2.5" class="chart-point" data-info="T8: 94 bài viết"/>
-                      <circle cx="488" cy="61" r="4" fill="#ffffff" stroke="#cc618a" stroke-width="2.5" class="chart-point" data-info="T9: 106 bài viết"/>
-                      <circle cx="545" cy="51" r="4" fill="#ffffff" stroke="#cc618a" stroke-width="2.5" class="chart-point" data-info="T10: 115 bài viết"/>
-                      <circle cx="603" cy="43" r="4" fill="#ffffff" stroke="#cc618a" stroke-width="2.5" class="chart-point" data-info="T11: 122 bài viết"/>
-                      <circle cx="660" cy="37" r="5" fill="#cc618a" stroke="#ffffff" stroke-width="2.5" class="chart-point" data-info="T12 (hiện tại): 128 bài viết"/>
+                      <!-- Data Points container -->
+                      <g id="trendChartPointsContainer">
+                        <circle cx="30" cy="180" r="4" fill="#ffffff" stroke="#cc618a" stroke-width="2.5" class="chart-point" data-info="T1: 0 bài viết"/>
+                      </g>
                     </svg>
 
                     <!-- Chart Tooltip -->
@@ -1183,12 +1173,12 @@
                 <svg class="donut-svg" viewBox="0 0 170 170">
                   <!-- Background circle -->
                   <circle cx="85" cy="85" r="60" fill="none" stroke="#f9dfe9" stroke-width="24"/>
-                  <!-- Facebook segment 65% (circumference ~ 377, 65% is 245) -->
-                  <circle cx="85" cy="85" r="60" fill="none" stroke="#cc618a" stroke-width="24"
-                          stroke-dasharray="245 132" stroke-dashoffset="65" stroke-linecap="round"/>
+                  <!-- Channel segments -->
+                  <circle id="donutSegmentFb" cx="85" cy="85" r="60" fill="none" stroke="#cc618a" stroke-width="24"
+                          stroke-dasharray="0 377" stroke-dashoffset="0" stroke-linecap="round"/>
                 </svg>
                 <div class="donut-center-text">
-                  <span class="donut-num">24,8K</span>
+                  <span class="donut-num" id="statDonutTotal">0</span>
                   <span class="donut-sub">Tương tác</span>
                 </div>
               </div>
@@ -1197,14 +1187,20 @@
                 <div class="channel-row">
                   <span class="color-dot fb"></span>
                   <span class="channel-name">Facebook</span>
-                  <span class="channel-count">16.120</span>
-                  <span class="channel-pct">65%</span>
+                  <span class="channel-count" id="statFbCount">0</span>
+                  <span class="channel-pct" id="statFbPct">0%</span>
                 </div>
                 <div class="channel-row">
                   <span class="color-dot ig"></span>
                   <span class="channel-name">Instagram</span>
-                  <span class="channel-count">8.680</span>
-                  <span class="channel-pct">35%</span>
+                  <span class="channel-count" id="statIgCount">0</span>
+                  <span class="channel-pct" id="statIgPct">0%</span>
+                </div>
+                <div class="channel-row">
+                  <span class="color-dot" style="background: #111111;"></span>
+                  <span class="channel-name">TikTok</span>
+                  <span class="channel-count" id="statTtCount">0</span>
+                  <span class="channel-pct" id="statTtPct">0%</span>
                 </div>
               </div>
             </div>
@@ -1228,48 +1224,13 @@
                     <th style="width: 12%;">KÊNH</th>
                   </tr>
                 </thead>
-                <tbody>
-                  <tr>
-                    <td>
-                      <div class="table-post-identity">
-                        <strong>5 bước dưỡng da cho buổi sáng rạng rỡ</strong>
-                        <span>BL-0128 · Nguyễn Hà Linh</span>
-                      </div>
-                    </td>
-                    <td>12.840</td>
-                    <td>1.148</td>
-                    <td class="text-success">8,94%</td>
-                    <td>Facebook</td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <div class="table-post-identity">
-                        <strong>Routine tối giản cho ngày bận rộn</strong>
-                        <span>BL-0123 · Trần Ngọc Mai</span>
-                      </div>
-                    </td>
-                    <td>10.260</td>
-                    <td>986</td>
-                    <td class="text-success">9,61%</td>
-                    <td>Facebook</td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <div class="table-post-identity">
-                        <strong>Dịu dàng với làn da, dịu dàng với chính mình</strong>
-                        <span>BL-0118 · Lê Thu Hương</span>
-                      </div>
-                    </td>
-                    <td>9.480</td>
-                    <td>824</td>
-                    <td class="text-success">8,69%</td>
-                    <td>Instagram</td>
-                  </tr>
+                <tbody id="statTopPostsBody">
+                  <!-- Populated dynamically from state.posts -->
                 </tbody>
               </table>
             </div>
 
-            <p class="table-footnote">Cập nhật gần nhất: 04/11/2026 · 16:00 · Số liệu được tổng hợp từ các bài viết đã xuất bản.</p>
+            <p class="table-footnote" id="statLastUpdatedFootnote">Cập nhật gần nhất: Đang đồng bộ từ máy chủ TiDB Cloud...</p>
           </div>
         </section>
 

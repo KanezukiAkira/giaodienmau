@@ -195,6 +195,96 @@ export function renderKanbanBoard() {
   if (footPending) footPending.textContent = `Xem tất cả ${countPending} bài viết →`;
   if (footRevising) footRevising.textContent = `Xem tất cả ${countRevising} bài viết →`;
   if (footScheduled) footScheduled.textContent = `Xem tất cả ${countScheduled} bài viết →`;
+
+  renderDashboardProgressMetrics();
+  renderPriorityInsight();
+  populateAuthorDropdowns();
+}
+
+export function renderDashboardProgressMetrics() {
+  const elCompPct = document.getElementById("kpiCompletionPct");
+  const elCompSub = document.getElementById("kpiCompletionSub");
+  const elOnSchedPct = document.getElementById("kpiOnSchedulePct");
+  const elOnSchedSub = document.getElementById("kpiOnScheduleSub");
+  const elUrgent = document.getElementById("kpiUrgentToday");
+  const elUrgentSub = document.getElementById("kpiUrgentTodaySub");
+  const elOverdue = document.getElementById("kpiOverdue");
+  const elOverdueSub = document.getElementById("kpiOverdueSub");
+
+  if (!elCompPct) return;
+
+  const total = state.posts.length;
+  const published = state.posts.filter(p => p.status === "published" || p.status === "scheduled").length;
+  const pending = state.posts.filter(p => p.status === "pending").length;
+  const revising = state.posts.filter(p => p.status === "revising").length;
+
+  const compPct = total > 0 ? Math.round((published / total) * 100) : 0;
+  elCompPct.textContent = `${compPct}%`;
+  if (elCompSub) elCompSub.textContent = `${published} / ${total} bài đã xuất bản`;
+
+  // Cần xử lý hôm nay: pending + revising
+  const urgentCount = pending + revising;
+  if (elUrgent) elUrgent.textContent = urgentCount < 10 ? `0${urgentCount}` : String(urgentCount);
+  if (elUrgentSub) elUrgentSub.textContent = `${pending} bài duyệt · ${revising} chỉnh sửa`;
+
+  // Kiểm tra bài quá hạn
+  const todayStr = new Date().toISOString().split("T")[0];
+  const overduePosts = state.posts.filter(p => {
+    if (p.status === "published" || !p.scheduleDate) return false;
+    return p.scheduleDate < todayStr;
+  });
+  const overdueCount = overduePosts.length;
+  if (elOverdue) elOverdue.textContent = overdueCount < 10 ? `0${overdueCount}` : String(overdueCount);
+  if (elOverdueSub) elOverdueSub.textContent = overdueCount > 0 ? "Cần ưu tiên xử lý" : "Tất cả đúng hạn";
+
+  // Đúng tiến độ %
+  const onSchedPct = total > 0 ? Math.max(0, Math.round(((total - overdueCount) / total) * 100)) : 100;
+  if (elOnSchedPct) elOnSchedPct.textContent = `${onSchedPct}%`;
+  if (elOnSchedSub) elOnSchedSub.textContent = overdueCount > 0 ? `${overdueCount} bài cần phân công lại` : "Toàn bộ bài viết đúng hạn";
+}
+
+export function renderPriorityInsight() {
+  const descEl = document.getElementById("priorityInsightDesc");
+  if (!descEl) return;
+
+  const pendingPosts = state.posts.filter(p => p.status === "pending");
+  const revisingPosts = state.posts.filter(p => p.status === "revising");
+  const todayStr = new Date().toISOString().split("T")[0];
+  const overduePosts = state.posts.filter(p => p.status !== "published" && p.scheduleDate && p.scheduleDate < todayStr);
+
+  if (pendingPosts.length > 0) {
+    const p0 = pendingPosts[0];
+    descEl.textContent = `Duyệt bài ${p0.id} (${(p0.title || '').slice(0, 32)}...) để kịp lịch xuất bản. Có tổng cộng ${pendingPosts.length} bài đang chờ duyệt.`;
+  } else if (revisingPosts.length > 0) {
+    const r0 = revisingPosts[0];
+    descEl.textContent = `Bài viết ${r0.id} đang cần cập nhật chỉnh sửa nội dung theo góp ý của quản lý.`;
+  } else if (overduePosts.length > 0) {
+    descEl.textContent = `Có ${overduePosts.length} bài viết đã quá hạn lịch đăng ban đầu. Cần kiểm tra và lên lại lịch phát hành.`;
+  } else if (state.posts.length > 0) {
+    descEl.textContent = `Toàn bộ ${state.posts.length} bài viết của Blossom Beauty đang được thực hiện đúng tiến độ. Không có bài viết nào bị trễ hạn.`;
+  } else {
+    descEl.textContent = "Hệ thống chưa ghi nhận bài viết nào. Hãy bấm 'Tạo bài viết' để bắt đầu chiến dịch truyền thông mới.";
+  }
+}
+
+export function populateAuthorDropdowns() {
+  const authorSelect = document.getElementById("kbAuthorFilter");
+  const postAuthorSelect = document.getElementById("postFilterAuthor");
+
+  const authorSet = new Set();
+  state.users.forEach(u => { if (u.name) authorSet.add(u.name); });
+  state.posts.forEach(p => { if (p.author) authorSet.add(p.author); });
+  const authors = Array.from(authorSet).sort();
+
+  [authorSelect, postAuthorSelect].forEach(sel => {
+    if (!sel) return;
+    const currentVal = sel.value;
+    sel.innerHTML = '<option value="">Tất cả tác giả</option>' + 
+      authors.map(a => `<option value="${escapeHTML(a)}">${escapeHTML(a)}</option>`).join("");
+    if (authors.includes(currentVal)) {
+      sel.value = currentVal;
+    }
+  });
 }
 
 export function handleDragStart(e, postId) {

@@ -48,7 +48,10 @@ import {
   handleDragOver,
   handleDrop,
   renderMemberProgressView,
-  setupKanbanDragDrop
+  setupKanbanDragDrop,
+  renderDashboardProgressMetrics,
+  renderPriorityInsight,
+  populateAuthorDropdowns
 } from './views/dashboardView.js';
 
 import {
@@ -93,7 +96,8 @@ import {
 import {
   updateStatsPeriod,
   exportReportData,
-  initChartTooltips
+  initChartTooltips,
+  renderStatisticsDashboard
 } from './views/statisticsView.js';
 
 import {
@@ -217,6 +221,10 @@ Object.assign(window, {
   updateStatsPeriod,
   exportReportData,
   initChartTooltips,
+  renderStatisticsDashboard,
+  renderDashboardProgressMetrics,
+  renderPriorityInsight,
+  populateAuthorDropdowns,
 
   // Notifications
   renderNotificationsList,
@@ -264,11 +272,13 @@ function initApp() {
   renderKanbanBoard();
   renderPostsTable();
   updateMetricsDisplay();
+  populateAuthorDropdowns();
   renderCalendar();
   renderApprovalView(state.activeApprovalPostId);
   renderNotificationsList();
   renderUsersTable();
   updateNotifCounters();
+  renderStatisticsDashboard();
   setupKeyboardShortcuts();
   setupKanbanDragDrop();
   initChartTooltips();
