@@ -334,8 +334,8 @@
               </div>
               <div class="action-group">
                 <select class="btn-pill-select" id="dashboardMonthSelect" onchange="filterKanbanBoard()">
-                  <option value="2026-11">Tháng 11, 2026 ⌄</option>
-                  <option value="2026-10">Tháng 10, 2026 ⌄</option>
+                  <option value="2026-11">Tháng 11, 2026</option>
+                  <option value="2026-10">Tháng 10, 2026</option>
                 </select>
                 <button class="btn btn-primary" onclick="openCreatePost()">
                   <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
@@ -400,14 +400,14 @@
             </div>
             <div class="action-group">
               <select class="btn-pill-select" id="kbAuthorFilter" onchange="filterKanbanBoard()">
-                <option value="">Tất cả tác giả ⌄</option>
+                <option value="">Tất cả tác giả</option>
                 <option value="Trần Ngọc Mai">Trần Ngọc Mai</option>
                 <option value="Nguyễn Hà Linh">Nguyễn Hà Linh</option>
                 <option value="Lê Thu Hương">Lê Thu Hương</option>
                 <option value="Phạm Khánh Linh">Phạm Khánh Linh</option>
               </select>
               <select class="btn-pill-select" id="kbCampaignFilter" onchange="filterKanbanBoard()">
-                <option value="">Tất cả chiến dịch ⌄</option>
+                <option value="">Tất cả chiến dịch</option>
                 <option value="Nâng niu làn da · Tháng 11">Nâng niu làn da · Tháng 11</option>
                 <option value="Rạng ngời đón nắng sớm">Rạng ngời đón nắng sớm</option>
               </select>
@@ -1289,7 +1289,7 @@
           </div>
 
           <div class="card panel">
-            <div class="list-tabs" style="margin-bottom: 16px; border-bottom: 1px solid var(--border-color); padding-bottom: 8px;">
+            <div class="list-tabs">
               <button class="tab-btn active" id="notifTabAll" onclick="filterNotifsByTab('all')">Tất cả thông báo</button>
               <button class="tab-btn" id="notifTabUnread" onclick="filterNotifsByTab('unread')">Chưa đọc</button>
             </div>
@@ -1386,13 +1386,13 @@
                   <input type="text" id="userFilterSearch" placeholder="Tìm theo tên hoặc email..." oninput="filterUsersTable()">
                 </div>
                 <select class="account-filter-select" id="userFilterRole" onchange="filterUsersTable()">
-                  <option value="">Tất cả vai trò ⌄</option>
+                  <option value="">Tất cả vai trò</option>
                   <option value="Quản trị viên">Quản trị viên</option>
                   <option value="Quản lý">Quản lý</option>
                   <option value="Biên tập viên">Biên tập viên</option>
                 </select>
                 <select class="account-filter-select" id="userFilterStatus" onchange="filterUsersTable()">
-                  <option value="">Trạng thái ⌄</option>
+                  <option value="">Trạng thái</option>
                   <option value="Hoạt động">Hoạt động</option>
                   <option value="Đã khóa">Đã khóa</option>
                 </select>
@@ -1441,9 +1441,9 @@
               <div class="dialog-form-group">
                 <label>Vai trò được phân công</label>
                 <select class="dialog-input" id="detailUserRoleSelect" onchange="updateSelectedUserRole()">
-                  <option value="Quản lý" selected>Quản lý ⌄</option>
-                  <option value="Quản trị viên">Quản trị viên ⌄</option>
-                  <option value="Biên tập viên">Biên tập viên ⌄</option>
+                  <option value="Quản lý" selected>Quản lý</option>
+                  <option value="Quản trị viên">Quản trị viên</option>
+                  <option value="Biên tập viên">Biên tập viên</option>
                 </select>
               </div>
 

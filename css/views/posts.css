@@ -3,40 +3,34 @@
   display: flex;
   align-items: center;
   gap: 24px;
-  border-bottom: 1px solid var(--border-color);
-  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border-color, #f2dfe7);
+  padding-bottom: 0;
+  margin-bottom: 16px;
 }
 
 .tab-btn {
   background: none;
   border: none;
   font-size: 13px;
-  color: var(--text-muted);
-  font-weight: 400;
+  color: var(--text-muted, #a4989d);
+  font-weight: 500;
   cursor: pointer;
   position: relative;
-  padding-bottom: 4px;
-  transition: color 0.15s;
+  padding: 8px 4px 10px 4px;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: color 0.15s, border-color 0.15s;
+  font-family: var(--font-sans);
 }
 
 .tab-btn:hover {
-  color: var(--primary);
+  color: var(--primary, #cc618a);
 }
 
 .tab-btn.active {
-  color: var(--primary);
+  color: var(--primary, #cc618a);
   font-weight: 600;
-}
-
-.tab-btn.active::after {
-  content: '';
-  position: absolute;
-  bottom: -13px;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background-color: var(--primary);
-  border-radius: 2px;
+  border-bottom: 2px solid var(--primary, #cc618a);
 }
 
 .filters-row {
