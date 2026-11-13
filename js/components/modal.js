@@ -369,29 +369,29 @@ export async function syncSocialMetrics() {
   const post = state.posts.find(p => p.id === postId);
   if (!post) return;
 
-  const ch = (post.channels || "").toLowerCase();
-  showToast(`Đang kết nối API mạng xã hội (${post.channels})...`, "info");
+  const rawPostId = post.rawId || (typeof post.id === 'string' && post.id.startsWith('BL-') ? parseInt(post.id.replace('BL-', ''), 10) : post.id);
+  if (!rawPostId) {
+    showToast("Không xác định được ID bài viết để đồng bộ.", "warning");
+    return;
+  }
+
+  showToast(`Đang kết nối API mạng xã hội để đồng bộ số liệu bài viết #${rawPostId}...`, "info");
 
   try {
-    if (ch.includes("facebook")) {
-      const fbPostId = prompt("Nhập Facebook Post ID (dạng {page_id}_{post_id}):", "1028471928_982736182");
-      if (!fbPostId) return;
-      const res = await socialApi.syncFacebookMetrics(post.rawId, fbPostId, "EAABwz_mock_token_or_page_token");
-      if (res) {
-        showToast("Đồng bộ số liệu thành công từ Facebook Graph API!", "success");
+    const res = await socialApi.syncPostMetrics(rawPostId);
+    if (res) {
+      if (post.metrics) {
+        post.metrics.reach = res.reach_count !== undefined ? res.reach_count : post.metrics.reach;
+        post.metrics.views = res.view_count !== undefined ? res.view_count : post.metrics.views;
+        post.metrics.likes = res.like_count !== undefined ? res.like_count : post.metrics.likes;
+        post.metrics.comments = res.comment_count !== undefined ? res.comment_count : post.metrics.comments;
+        post.metrics.shares = res.share_count !== undefined ? res.share_count : post.metrics.shares;
       }
-    } else if (ch.includes("tiktok")) {
-      const videoId = prompt("Nhập TikTok Video ID:", "718293049182");
-      if (!videoId) return;
-      const res = await socialApi.syncTikTokMetrics(post.rawId, videoId, "act.tiktok_access_token");
-      if (res) {
-        showToast("Đồng bộ số liệu thành công từ TikTok Open API!", "success");
-      }
-    } else {
-      showToast("Tự động đồng bộ số liệu qua API hoàn tất!", "success");
+      showToast("Đồng bộ số liệu thành công từ API mạng xã hội!", "success");
     }
   } catch (e) {
-    showToast(`Đồng bộ API: ${e.message}`, "info");
+    const errMsg = e.detail || e.message || "Không thể đồng bộ số liệu qua API";
+    showToast(`Đồng bộ API: ${errMsg}`, "error");
   }
 
   closeMetricsModal();

@@ -53,5 +53,10 @@ export const socialApi = {
       video_id: videoId,
       access_token: accessToken
     });
+  },
+
+  // --- Tự động hóa đồng bộ theo bài viết (Unified Sync) ---
+  async syncPostMetrics(postId) {
+    return apiClient.post(`social/posts/${postId}/sync`);
   }
 };

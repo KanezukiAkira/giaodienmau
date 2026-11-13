@@ -54,7 +54,9 @@ export function mapBackendPostToUI(p) {
     "REJECTED": { status: "rejected", statusText: "Từ chối" },
     "APPROVED": { status: "approved", statusText: "Đã duyệt" },
     "SCHEDULED": { status: "scheduled", statusText: "Đã lên lịch" },
-    "PUBLISHED": { status: "published", statusText: "Đã xuất bản" }
+    "PUBLISHING": { status: "publishing", statusText: "Đang xuất bản" },
+    "PUBLISHED": { status: "published", statusText: "Đã xuất bản" },
+    "FAILED": { status: "failed", statusText: "Xuất bản thất bại" }
   };
   const platformNames = { 1: "Facebook", 2: "Instagram", 3: "TikTok" };
   const mapped = statusMap[p.status] || { status: (p.status || "draft").toLowerCase(), statusText: p.status || "Bản nháp" };

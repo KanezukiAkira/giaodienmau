@@ -7,6 +7,7 @@ import { formatDateDisplay } from '../utils/formatters.js';
 import { postsApi } from '../api/postsApi.js';
 import { approvalsApi } from '../api/approvalsApi.js';
 import { getCurrentUser, isManager, isStaff, canEditPost } from '../core/permissions.js';
+import { APP_CONFIG } from '../config/appConfig.js';
 
 export function openCreatePost() {
   const elEditId = document.getElementById("editPostId");
@@ -141,7 +142,18 @@ export function openEditPost(postId) {
   if (elTitle) elTitle.value = post.title;
   if (elCat) elCat.value = post.category || "Chăm sóc da";
   if (elCamp) elCamp.value = post.campaign || "Nâng niu làn da · Tháng 11";
-  if (elChannels) elChannels.value = post.channels || "Facebook & Instagram";
+  if (elChannels) {
+    const rawCh = (post.channels || "").toLowerCase();
+    if (rawCh.includes("tiktok")) {
+      elChannels.value = "Tiktok / Reels";
+    } else if (rawCh.includes("instagram") && !rawCh.includes("facebook")) {
+      elChannels.value = "Instagram Feed";
+    } else if (rawCh === "facebook" || rawCh === "facebook page") {
+      elChannels.value = "Facebook Page";
+    } else {
+      elChannels.value = post.channels || "Facebook & Instagram";
+    }
+  }
   if (elAuthor) elAuthor.value = post.author;
   
   const formattedSchedule = post.scheduleDate ? `${post.scheduleDate}T${post.scheduleTime || '08:00'}` : "2026-11-05T08:00";
@@ -151,7 +163,11 @@ export function openEditPost(postId) {
 
   if (post.heroImage) {
     const elImg = document.getElementById("mediaPreviewImg");
-    if (elImg) elImg.src = post.heroImage;
+    if (elImg) {
+      elImg.src = post.heroImage.startsWith("/")
+        ? `${APP_CONFIG.API_BASE_URL.replace(/\/api\/?$/, "")}${post.heroImage}`
+        : post.heroImage;
+    }
   }
 
   const badge = document.getElementById("editorCurrentStatusBadge");
@@ -200,8 +216,13 @@ export async function savePostDraft() {
 
   let platformId = 1;
   const chLower = channels.toLowerCase();
-  if (chLower.includes("instagram")) platformId = 2;
-  else if (chLower.includes("tiktok")) platformId = 3;
+  if (chLower.includes("tiktok")) {
+    platformId = 3;
+  } else if (chLower.includes("instagram") && !chLower.includes("facebook")) {
+    platformId = 2;
+  } else {
+    platformId = 1; // Facebook Page or Facebook & Instagram
+  }
 
   const plannedTime = sDate ? `${sDate}T${sTime || '08:00'}:00` : null;
 
@@ -411,7 +432,10 @@ export async function handleImageUpload(e) {
     const uploadRes = await postsApi.uploadMedia(file);
     if (uploadRes && uploadRes.file_url) {
       const elImg = document.getElementById("mediaPreviewImg");
-      if (elImg) elImg.src = uploadRes.file_url;
+      const displayUrl = uploadRes.file_url.startsWith("/")
+        ? `${APP_CONFIG.API_BASE_URL.replace(/\/api\/?$/, "")}${uploadRes.file_url}`
+        : uploadRes.file_url;
+      if (elImg) elImg.src = displayUrl;
       if (elSpecs) elSpecs.textContent = `${(file.size / (1024 * 1024)).toFixed(1)} MB · Đã tải lên máy chủ`;
     }
   } catch (err) {
