@@ -7,8 +7,9 @@ import { STORAGE_KEYS } from '../constants/enums.js';
 
 export const authApi = {
   async login(usernameOrEmail, password, remember = true) {
+    const cleanUsernameOrEmail = typeof usernameOrEmail === 'string' ? usernameOrEmail.trim() : usernameOrEmail;
     const data = await apiClient.post('auth/login', {
-      username_or_email: usernameOrEmail,
+      username_or_email: cleanUsernameOrEmail,
       password: password
     });
 
